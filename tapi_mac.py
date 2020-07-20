@@ -8,10 +8,6 @@ tapi_method=sys.argv[1]
 coin_pair=sys.argv[2]
 tapi_nonce = sys.argv[3]
 MB_TAPI_SECRET = sys.argv[4]
-#tapi_method='list_orders'
-#coin_pair='BRLBTC'
-#tapi_nonce = 5
-#MB_TAPI_SECRET = '721d1a318a41f926231344cbb0b5db4c3dc1f100c50e073a76be998f4a1eb806'
 
 # constantes
 REQUEST_PATH = '/tapi/v3/'
