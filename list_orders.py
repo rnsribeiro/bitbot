@@ -118,11 +118,85 @@ def getOrdersHasFills(index=0):
 	'''
 	return result['response_data']['orders'][index]['has_fills']
 
-def getOrdersQuantity(index=0)
+def getOrdersQuantity(index=0):
 	''' quantity: Quantidade da moeda digital a comprar/vender ao preço de limit_price.
 	Tipo: String
 	Formato: Ponto como separador decimal, sem separador de milhar
 	'''
 	return result['response_data']['orders'][index]['quantity']
 
+def getOrdersLimitPrice(index=0):
+	''' limit_price: Preço unitário máximo de compra ou mínimo de venda.
+	Tipo: String
+	Formato: Ponto como separador decimal, sem separador de milhar
+	'''
+	return result['response_data']['orders'][index]['limit_price']
 
+def getOrdersExecutedQuantity(index=0):
+	''' limit_price: Preço unitário máximo de compra ou mínimo de venda.
+	Tipo: String
+	Formato: Ponto como separador decimal, sem separador de milhar
+	'''
+	return result['response_data']['orders'][index]['executed_quantity']
+
+def getOrdersExecutedPriceAvg(index=0):
+	''' executed_price_avg: Preço unitário médio de execução.
+	Tipo: String
+	Formato: Ponto como separador decimal, sem separador de milhar
+	'''
+	return result['response_data']['orders'][index]['execuder_price_avg']
+
+def getOrdersFee(index=0):
+	''' fee: Comissão da ordem, para ordens de compra os valores são em moeda digital, para ordens de venda os valores são em Reais.
+	Tipo: String
+	Formato: Ponto como separador decimal, sem separador de milhar
+	'''
+	return result['response_data']['orders'][index]['fee']
+
+def getOrdersCreatedTimestamp(index=0):
+	''' created_timestamp: Data e hora de criação da ordem.
+	Tipo: String
+	Formato: Era Unix
+	'''
+	return result['response_data']['orders'][index]['']
+
+def getOrdersUpdatedTimestamp(index=0):
+	''' updated_timestamp: Data e hora da última atualização da ordem. Não é alterado caso a ordem esteja em um estado final (ver status).
+	Tipo: String
+	Format: Era Unix
+	'''
+	return result['response_data']['orders'][index]['updated_timestamp']
+
+def getOrdersOperationsId(index=0,indexOperation=0):
+	'''operation_id: Número de identificação da operação, único por coin_pair
+		Tipo: Inteiro
+	'''
+	return result['response_data']['orders'][index]['operations'][indexOperation]['operation_id']
+
+def getOrdersOperationsQuantity(index=0,indexOperation=0):
+	'''quantity: Quantidade de moeda digital da operação.
+		Tipo: String
+	'''
+	return result['response_data']['orders'][index]['operations'][indexOperation]['quantity']
+
+def getOrdersOperationsPrice(index=0,indexOperation=0):
+	'''price: Preço unitário da operação.
+		Tipo: String
+	'''
+	return result['response_data']['orders'][index]['operations'][indexOperation]['price']
+
+def getOrdersOperationsFeeRate(index=0,indexOperation=0):
+	'''fee_rate: Comissão cobrada pelo serviço de intermediação. A comissão varia para ordens executadas e executoras.
+		Tipo: String
+	'''
+	return result['response_data']['orders'][index]['operations'][indexOperation]['fee_rate']
+
+def getOrdersOperationsExecutedTimestamp(index=0,indexOperation=0):
+	'''executed_timestamp: Data e hora de execução da operação.
+		Tipo: String
+		Format: Era Unix
+	'''
+	return result['response_data']['orders'][index]['operations'][indexOperation]['executed_timestamp']
+
+
+print(getOrdersOperationsExecutedTimestamp())
