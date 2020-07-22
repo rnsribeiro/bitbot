@@ -66,7 +66,7 @@ try:
 
 	result = json.loads(resp)
 
-	#print(json.dumps(result, indent=4))
+	print(json.dumps(result, indent=4))
 
 finally:
     if conn:
@@ -140,13 +140,30 @@ def getOrderbookAsksIsOwner(index=0):
 	'''
 	return result['response_data']['orderbook']['asks'][index]['is_owner']
 
+def getOrderbookLatestOrderId():
+	'''
+	latest_order_id: Última ordem contemplada no resultado de orderbook.
+	Entende-se como ordem contemplada a última ordem criada e confrotada ao
+	livro de acordo com o resultado retornado deste método. Assim, essa
+	ordem pode ter sido executada ou não. A última ordem contemplada pode
+	não estar presente no livro, ou por ter sido executada em sua totalidade
+	ou por já ter sido cancelada em ação posterior a sua criação. Assim, é
+	importante salientar que uma ordem cancelada, apesar de alterar o
+	livro, não altera o valor deste campo.
+	'''
+	return result['response_data']['orderbook']['latest_order_id']
+
 print("Resultados com ordens de compra:")
 print(getOrderbookBidsID())
 print(getOrderbookBidsQuantity())
 print(getOrderbookBidsLimitPrice())
 print(getOrderbookBidsIsOwner())
+
 print("Resultados com ordens de venda:")
 print(getOrderbookAsksID())
 print(getOrderbookAsksQuantity())
 print(getOrderbookAsksLimitPrice())
 print(getOrderbookAsksIsOwner())
+
+print("Id da úlitma ordem comtemplada:")
+print(getOrderbookLatestOrderId())
