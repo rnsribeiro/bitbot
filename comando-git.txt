@@ -1,0 +1,5 @@
+git status
+git add arquivo
+git commit -m "comentario"
+git push -u origin master
+
