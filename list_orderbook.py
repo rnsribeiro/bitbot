@@ -73,6 +73,7 @@ finally:
         conn.close()
 
 
+# Funções que retornam informações com as ordens de compra.
 def getOrderbookBidsID(index=0):
 	'''
 	bids: Lista de ordens de compra (bid) abertas, ordenadas pelo maior preço.
@@ -81,7 +82,7 @@ def getOrderbookBidsID(index=0):
 
 def getOrderbookBidsQuantity(index=0):
 	'''
-	quantity: Quantidade disponível para compra/venda ao preço de limit_price.
+	quantity: Quantidade disponível para compra ao preço de limit_price.
 	Tipo: String
 	Formato: Ponto como separador decimal, sem separador de milhar
 	'''
@@ -89,7 +90,7 @@ def getOrderbookBidsQuantity(index=0):
 
 def getOrderbookBidsLimitPrice(index=0):
 	'''
-	limit_price: Preço unitário de compra/venda.
+	limit_price: Preço unitário de compra.
 	Tipo: String
 	Formato: Ponto como separador decimal, sem separador de milhar
 	'''
@@ -105,7 +106,47 @@ def getOrderbookBidsIsOwner(index=0):
 	'''
 	return result['response_data']['orderbook']['bids'][index]['is_owner']
 
+
+# Funções que retornam informações com as ordens de venda
+def getOrderbookAsksID(index=0):
+	'''
+	bids: Lista de ordens de venda (asks) abertas, ordenadas pelo menor preço.
+	'''
+	return result['response_data']['orderbook']['asks'][index]['order_id']
+
+def getOrderbookAsksQuantity(index=0):
+	'''
+	quantity: Quantidade disponível para venda ao preço de limit_price.
+	Tipo: String
+	Formato: Ponto como separador decimal, sem separador de milhar
+	'''
+	return result['response_data']['orderbook']['asks'][index]['quantity']
+
+def getOrderbookAsksLimitPrice(index=0):
+	'''
+	limit_price: Preço unitário de venda.
+	Tipo: String
+	Formato: Ponto como separador decimal, sem separador de milhar
+	'''
+	return result['response_data']['orderbook']['asks'][index]['limit_price']
+
+def getOrderbookAsksIsOwner(index=0):
+	'''
+	is_owner: Informa se a ordem pertence ao proprietário da chave TAPI.
+	Tipo: Booleano
+	Domínio de dados:
+	true : Pertence ao proprietário da chave TAPI
+	false : Não pertence ao proprietário da chave TAPI
+	'''
+	return result['response_data']['orderbook']['asks'][index]['is_owner']
+
+print("Resultados com ordens de compra:")
 print(getOrderbookBidsID())
 print(getOrderbookBidsQuantity())
 print(getOrderbookBidsLimitPrice())
 print(getOrderbookBidsIsOwner())
+print("Resultados com ordens de venda:")
+print(getOrderbookAsksID())
+print(getOrderbookAsksQuantity())
+print(getOrderbookAsksLimitPrice())
+print(getOrderbookAsksIsOwner())
