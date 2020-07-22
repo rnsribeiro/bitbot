@@ -12,6 +12,8 @@
 	agrupadas como feito no método público.
 '''
 
+"Comentário"
+
 import hashlib
 import hmac
 import json
