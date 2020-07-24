@@ -33,20 +33,16 @@ class PlaceSellOrder:
 
     # Para obter variação de forma simples
     # timestamp pode ser utilizado:
-    tapi_nonce = str(int(time.time()))
+    # tapi_nonce = str(int(time.time()))
 
 
-    def __init__(self,coin_pair,quantity,limit_price):
-        coin_pair=coin_pair
-        quantity=quantity
-        limit_price=limit_price
-
-        #placeSellOrder(coin_pair,quantity,limit_price)
+    def __init__(self,coin_pair,quantity,limit_price,tapi_nonce=str(int(time.time()))):
+       #placeSellOrder(coin_pair,quantity,limit_price)
 
         # Parâmetros
         params = {
             'tapi_method': 'place_sell_order',
-            'tapi_nonce': self.tapi_nonce,
+            'tapi_nonce': tapi_nonce,
             'coin_pair': coin_pair,
             'quantity': quantity,
             'limit_price':limit_price

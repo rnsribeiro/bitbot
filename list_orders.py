@@ -24,7 +24,7 @@ class ListOrders:
 	
 
 
-	def __init__(self,coin_pair,tapi_nonce):
+	def __init__(self,coin_pair,tapi_nonce=str(int(time.time()))):
 		self.coin_pair = coin_pair
 		self.tapi_nonce = tapi_nonce
 

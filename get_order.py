@@ -17,12 +17,6 @@ import userinfo
 from http import client
 from urllib.parse import urlencode
 
-# Constantes
-MB_TAPI_ID = userinfo.id
-MB_TAPI_SECRET = userinfo.secret
-REQUEST_HOST = 'www.mercadobitcoin.net'
-REQUEST_PATH = '/tapi/v3/'
-
 # Parâmetros que podem ser passado por linha de comando.
 #coin_pair = 'BRLXRP'
 #order_id = '8155792'
@@ -32,8 +26,13 @@ REQUEST_PATH = '/tapi/v3/'
 # timestamp pode ser utilizado:
 #tapi_nonce = str(int(time.time()))
 class GetOrder:
+	# Constantes
+	MB_TAPI_ID = userinfo.id
+	MB_TAPI_SECRET = userinfo.secret
+	REQUEST_HOST = 'www.mercadobitcoin.net'
+	REQUEST_PATH = '/tapi/v3/'
 
-	def __init__(self,coin_pair,order_id,tapi_nonce):
+	def __init__(self,coin_pair,order_id,tapi_nonce=str(int(time.time()))):
 		# Parâmetros
 		params = {
 			'tapi_method': 'get_order',
@@ -222,6 +221,8 @@ class GetOrder:
 		'''
 		return self.result['response_data']['order']['operations'][indexOperation]['executed_timestamp']
 
+
+
 # Para testar a função
 #print(getId())
 #print(getCoinPair())
@@ -241,3 +242,5 @@ class GetOrder:
 #print(getOperationsFeeRate())
 #print(getOperationsExecutedTimestamp())
 
+getorder = GetOrder('BRLXRP',8155792)
+print(getorder.getId())

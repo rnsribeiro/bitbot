@@ -36,17 +36,13 @@ class PlaceBuyOrder:
     
 
 
-    def __init__(self,coin_pair,quantity,limit_price):
-        coin_pair=coin_pair
-        quantity=quantity
-        limit_price=limit_price
-
+    def __init__(self,coin_pair,quantity,limit_price,tapi_nonce = str(int(time.time()))):
         #placeSellOrder(coin_pair,quantity,limit_price)
 
         # Parâmetros
         params = {
             'tapi_method': 'place_buy_order',
-            'tapi_nonce': self.tapi_nonce,
+            'tapi_nonce': tapi_nonce,
             'coin_pair': coin_pair,
             'quantity': quantity,
             'limit_price':limit_price
