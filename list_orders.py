@@ -60,6 +60,9 @@ class ListOrders:
 
 			self.result = json.loads(resp)
 
+			#print(json.dumps(self.result, indent=4))
+
+
 		finally:
 			if conn:
 				conn.close()
@@ -89,7 +92,7 @@ class ListOrders:
 		BRLMBCONS01 : Real e Cota de Consórcio
 		BRLUSDC : Real e USDC (USD Coin)
 		'''
-		return result['response_data']['orders'][index]['coin_pair']
+		return self.result['response_data']['orders'][index]['coin_pair']
 
 	def getOrdersOrderType(self,index=0):
 		'''
@@ -99,7 +102,7 @@ class ListOrders:
 		1 : Ordem de compra
 		2 : Ordem de venda
 		'''
-		return result['response_data']['orders'][index]['order_type']
+		return self.result['response_data']['orders'][index]['order_type']
 
 	def getOrdersStatus(self,index=0):
 		'''
@@ -110,7 +113,7 @@ class ListOrders:
 		3 : canceled : Ordem cancelada, executada parcialmente ou sem execuções. Estado final.
 		4 : filled : Ordem concluída, executada em sua totalidade. Estado final.
 		'''
-		return result['response_data']['orders'][index]['status']
+		return self.result['response_data']['orders'][index]['status']
 
 	def getOrdersHasFills(self,index=0):
 		'''
@@ -119,7 +122,7 @@ class ListOrders:
 		false : Sem execuções.
 		true : Com uma ou mais execuções.
 		'''
-		return result['response_data']['orders'][index]['has_fills']
+		return self.result['response_data']['orders'][index]['has_fills']
 
 	def getOrdersQuantity(self,index=0):
 		'''
@@ -127,7 +130,7 @@ class ListOrders:
 		Tipo: String
 		Formato: Ponto como separador decimal, sem separador de milhar
 		'''
-		return result['response_data']['orders'][index]['quantity']
+		return self.result['response_data']['orders'][index]['quantity']
 
 	def getOrdersLimitPrice(self,index=0):
 		'''
@@ -135,7 +138,7 @@ class ListOrders:
 		Tipo: String
 		Formato: Ponto como separador decimal, sem separador de milhar
 		'''
-		return result['response_data']['orders'][index]['limit_price']
+		return self.result['response_data']['orders'][index]['limit_price']
 
 	def getOrdersExecutedQuantity(self,index=0):
 		'''
@@ -143,7 +146,7 @@ class ListOrders:
 		Tipo: String
 		Formato: Ponto como separador decimal, sem separador de milhar
 		'''
-		return result['response_data']['orders'][index]['executed_quantity']
+		return self.result['response_data']['orders'][index]['executed_quantity']
 
 	def getOrdersExecutedPriceAvg(self,index=0):
 		'''
@@ -151,7 +154,7 @@ class ListOrders:
 		Tipo: String
 		Formato: Ponto como separador decimal, sem separador de milhar
 		'''
-		return result['response_data']['orders'][index]['execuder_price_avg']
+		return self.result['response_data']['orders'][index]['execuder_price_avg']
 
 	def getOrdersFee(self,index=0):
 		'''
@@ -159,7 +162,7 @@ class ListOrders:
 		Tipo: String
 		Formato: Ponto como separador decimal, sem separador de milhar
 		'''
-		return result['response_data']['orders'][index]['fee']
+		return self.result['response_data']['orders'][index]['fee']
 
 	def getOrdersCreatedTimestamp(self,index=0):
 		'''
@@ -167,7 +170,7 @@ class ListOrders:
 		Tipo: String
 		Formato: Era Unix
 		'''
-		return result['response_data']['orders'][index]['']
+		return self.result['response_data']['orders'][index]['']
 
 	def getOrdersUpdatedTimestamp(self,index=0):
 		'''
@@ -175,35 +178,35 @@ class ListOrders:
 		Tipo: String
 		Format: Era Unix
 		'''
-		return result['response_data']['orders'][index]['updated_timestamp']
+		return self.result['response_data']['orders'][index]['updated_timestamp']
 
 	def getOrdersOperationsId(self,index=0,indexOperation=0):
 		'''
 		operation_id: Número de identificação da operação, único por coin_pair
 		Tipo: Inteiro
 		'''
-		return result['response_data']['orders'][index]['operations'][indexOperation]['operation_id']
+		return self.result['response_data']['orders'][index]['operations'][indexOperation]['operation_id']
 
 	def getOrdersOperationsQuantity(self,index=0,indexOperation=0):
 		'''
 		quantity: Quantidade de moeda digital da operação.
 		Tipo: String
 		'''
-		return result['response_data']['orders'][index]['operations'][indexOperation]['quantity']
+		return self.result['response_data']['orders'][index]['operations'][indexOperation]['quantity']
 
 	def getOrdersOperationsPrice(self,index=0,indexOperation=0):
 		'''
 		price: Preço unitário da operação.
 		Tipo: String
 		'''
-		return result['response_data']['orders'][index]['operations'][indexOperation]['price']
+		return self.result['response_data']['orders'][index]['operations'][indexOperation]['price']
 
 	def getOrdersOperationsFeeRate(self,index=0,indexOperation=0):
 		'''
 		fee_rate: Comissão cobrada pelo serviço de intermediação. A comissão varia para ordens executadas e executoras.
 		Tipo: String
 		'''
-		return result['response_data']['orders'][index]['operations'][indexOperation]['fee_rate']
+		return self.result['response_data']['orders'][index]['operations'][indexOperation]['fee_rate']
 
 	def getOrdersOperationsExecutedTimestamp(self,index=0,indexOperation=0):
 		'''
@@ -211,7 +214,7 @@ class ListOrders:
 		Tipo: String
 		Format: Era Unix
 		'''
-		return result['response_data']['orders'][index]['operations'][indexOperation]['executed_timestamp']
+		return self.result['response_data']['orders'][index]['operations'][indexOperation]['executed_timestamp']
 
 	
 

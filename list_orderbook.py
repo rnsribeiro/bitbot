@@ -155,17 +155,5 @@ class ListOrderBook:
 		'''
 		return self.result['response_data']['orderbook']['latest_order_id']
 
-#print("Resultados com ordens de compra:")
-#print(getOrderbookBidsID())
-#print(getOrderbookBidsQuantity())
-#print(getOrderbookBidsLimitPrice())
-#print(getOrderbookBidsIsOwner())
 
-#print("Resultados com ordens de venda:")
-#print(getOrderbookAsksID())
-#print(getOrderbookAsksQuantity())
-#print(getOrderbookAsksLimitPrice())
-#print(getOrderbookAsksIsOwner())
 
-#print("Id da úlitma ordem comtemplada:")
-#print(getOrderbookLatestOrderId())

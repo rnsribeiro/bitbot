@@ -74,7 +74,7 @@ class PlaceSellOrder:
 
             self.result = json.loads(resp)
 
-            #print(json.dumps(result, indent=4))
+            #print(json.dumps(self.result, indent=4))
 
         finally:
             if conn:
