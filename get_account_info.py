@@ -1,3 +1,10 @@
+'''
+get_account_info Descrição:
+Retorna dados da conta, como saldos das moedas (Real, BCash, Bitcoin, Ethereum, Litecoin e XRP),
+saldos considerando retenção em ordens abertas, quantidades de ordens abertas por moeda digital,
+limites de saque/transferências das moedas.
+'''
+
 import hashlib
 import hmac
 import json
@@ -22,7 +29,7 @@ class GetAccountInfo:
 	# timestamp pode ser utilizado:
 	#tapi_nonce = str(int(time.time()))
 
-	def __init__(self,tapi_nonce = str(int(time.time()))):
+	def __init__(self,tapi_nonce=str(int(time.time()))):
 		# Parâmetros
 		params = {
 			'tapi_method': 'get_account_info',
@@ -52,7 +59,9 @@ class GetAccountInfo:
 			resp = conn.getresponse()
 			resp = resp.read()
 
-			result = json.loads(resp)
+			self.result = json.loads(resp)
+
+			conn.close()
 
 		finally:
 			if conn:

@@ -30,7 +30,7 @@ class CancelOrder:
 	# timestamp pode ser utilizado:
 	#tapi_nonce = str(int(time.time()))
 
-	def __init__(self,coin_pair,order_id,tapi_nonce):
+	def __init__(self,coin_pair,order_id,tapi_nonce=str(int(time.time()))):
 		self.coin_pair=coin_pair
 		self.order_id=order_id
 		self.tapi_nonce=tapi_nonce
@@ -69,7 +69,8 @@ class CancelOrder:
 
 			result = json.loads(resp)
 
-			print(json.dumps(result, indent=4))
+			#print(json.dumps(result, indent=4))
+			conn.close()
 
 		finally:
 			if conn:

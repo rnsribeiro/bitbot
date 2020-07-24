@@ -35,7 +35,7 @@ class ListOrderBook:
 	# timestamp pode ser utilizado:
 	#tapi_nonce = str(int(time.time()))
 
-	def __init__(self,coin_pair,tapi_nonce = str(int(time.time()))):
+	def __init__(self,coin_pair,tapi_nonce=str(int(time.time()))):
 		# Parâmetros
 		params = {
 			'tapi_method': 'list_orderbook',
@@ -68,7 +68,7 @@ class ListOrderBook:
 
 			self.result = json.loads(resp)
 
-			print(json.dumps(self.result, indent=4))
+			#print(json.dumps(self.result, indent=4))
 
 		finally:
 			if conn:
