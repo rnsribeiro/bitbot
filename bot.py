@@ -19,18 +19,24 @@ from cancel_order import CancelOrder
 from list_orders import ListOrders
 
 ultimaCompra=0
+ordensDia=0
 
 cont=0
-while True:    
+os.system("clear")
+while True: 
+    print("Buscando tipo de ordem de compra com indice:"+str(cont))   
     time.sleep(1)
     listOrders = ListOrders("BRLXRP",str(int(time.time())))
-    if int(listOrders.getOrdersOrderType(cont))==1:
+    if int(listOrders.getOrdersOrderType(cont))==1:        
         ultimaCompra=float(listOrders.getOrdersLimitPrice(cont))
+        print("Valor da ultima compra encontrado: R$"+str(ultimaCompra))        
         break
     cont=cont+1
 
 while True:
-    os.system("clear")
+    #os.system("clear")
+    print("Ordens criadas no dia: "+str(ordensDia))
+    ordensDia=ordensDia+1
 
     time.sleep(1)
     AccountInfo = GetAccountInfo(str(int(time.time())))
