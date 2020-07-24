@@ -41,8 +41,6 @@ class CancelOrder:
 			'tapi_nonce': self.tapi_nonce,
 			'coin_pair': self.coin_pair,
 			'order_id': self.order_id
-
-
 		}
 
 		params = urlencode(params)
