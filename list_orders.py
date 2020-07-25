@@ -24,15 +24,19 @@ class ListOrders:
 	
 
 
-	def __init__(self,coin_pair,tapi_nonce=str(int(time.time()))):
+	def __init__(self,coin_pair,tapi_nonce=str(int(time.time())),status_list='',order_type=''):
 		self.coin_pair = coin_pair
 		self.tapi_nonce = tapi_nonce
+		self.status_list = status_list
+		self.order_type = order_type
 
 		# Parâmetros
 		params = {
 			'tapi_method': 'list_orders',
 			'tapi_nonce': self.tapi_nonce,
-			'coin_pair': self.coin_pair
+			'coin_pair': self.coin_pair,
+			'status_list':'['+str(self.status_list)+']',
+			'order_type':self.order_type
 		}
 		params = urlencode(params)
 
@@ -217,4 +221,3 @@ class ListOrders:
 		return self.result['response_data']['orders'][index]['operations'][indexOperation]['executed_timestamp']
 
 	
-
