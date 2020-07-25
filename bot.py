@@ -18,7 +18,7 @@ from place_buy_order import PlaceBuyOrder
 from cancel_order import CancelOrder
 from list_orders import ListOrders
 
-ultimaCompra=0
+ultimaCompra=0.0
 ordensDia=0
 
 cont=0
@@ -26,94 +26,108 @@ os.system("clear")
 #time.sleep(1)
 listOrders = ListOrders("BRLXRP",str(int(time.time())))
 while True: 
-    print("Buscando tipo de ordem de compra com indice:"+str(cont))    
+    try:
+        print("Buscando tipo de ordem de compra com indice:"+str(cont))    
     
-    if int(listOrders.getOrdersOrderType(cont))==1:        
-        ultimaCompra=float(listOrders.getOrdersLimitPrice(cont))
-        print("Valor da ultima compra encontrado: R${0:9.5f} no indice: {1} ".format(ultimaCompra,cont))              
+        if int(listOrders.getOrdersOrderType(cont))==1:        
+            ultimaCompra=float(listOrders.getOrdersLimitPrice(cont))
+            print("Valor da ultima compra encontrado: R${0:9.5f} no indice: {1} ".format(ultimaCompra,cont))              
+            break
+        cont=cont+1
+    except:
+        # ESSA VARIÁVEL DEVE SER INSERIDA MANUALMENTE
+        ultimaCompra=1.0798
+        print("Definindo ultima compra com valor manual: R$"+str(ultimaCompra))
         break
-    cont=cont+1
+
 
 while True:
-    #os.system("clear")
-    print("Ordens criadas no dia: "+str(ordensDia))
-    ordensDia=ordensDia+1
-
-    time.sleep(1)
-    AccountInfo = GetAccountInfo(str(int(time.time())))
-    saldoBRL = float(AccountInfo.getBalanceAvailable('brl'))
-    quantidadeXRP = float(AccountInfo.getBalanceAvailable('xrp'))
-    
-
-    if saldoBRL>=10.0:
-        time.sleep(1)
-        orderBook = ListOrderBook('BRLXRP',str(int(time.time())))
-        print("############ ORDEN DE COMPRA ############")
-        print("Saldo de Reais: R$"+str(saldoBRL))
-        maiorCompra = float(orderBook.getOrderbookBidsLimitPrice())
-        print("Maior preço de compra do orderbook: "+str(maiorCompra))
-        compraSugerida=float("{0:9.5f}".format(maiorCompra+0.00001))
-        print("Preço de compra sugerido: "+str(compraSugerida))
-        quantidadeXRP=float("{0:9.8f}".format(saldoBRL/compraSugerida)) 
-        print("Quantidade de XRP calculado sem taxa: "+str(quantidadeXRP)) 
-        time.sleep(1)  
-        buyOrder = PlaceBuyOrder('BRLXRP',quantidadeXRP,compraSugerida,str(int(time.time())))
-        buyOrder_id = int(buyOrder.getOrderId())
-        print("Ordem de compra criado: "+str(buyOrder_id))
-        print("Aguardando 30 segundos .")
-        time.sleep(10)
-        print("Aguardando 20 segundos ..")
-        time.sleep(10)
-        print("Aguardando 10 segundos ...")
-        time.sleep(10)
-        ultimaCompra=compraSugerida
-        cancelBuyOrder = CancelOrder("BRLXRP",buyOrder_id,str(int(time.time())))
-        print("Ordem de compra cancelada:")
-        print("\n\n")
-
-    elif quantidadeXRP>=0.1:
-        time.sleep(1)
-        orderBook = ListOrderBook('BRLXRP',str(int(time.time())))
-
-        print("############ ORDEN DE VENDA ############")
-        menorVenda = float(orderBook.getOrderbookAsksLimitPrice())
-        print("Menor preço de venda do orderbook: "+str(menorVenda))
-
-        vendaSugerida = float(ultimaCompra*1.008)
-
-        cont=0
-        while cont<20:
-            menorVenda = float(orderBook.getOrderbookAsksLimitPrice(cont))
-            print("Menor venda com indice: {0} R${1:9.5f}".format(cont,menorVenda))
-            if vendaSugerida<menorVenda:
-                vendaSugerida=menorVenda-0.00001
-                break
-            cont=cont+1
-
-        print("Preço de venda sugerido: "+str(vendaSugerida))
-
-        reais = float("{0:9.8f}".format(vendaSugerida*quantidadeXRP))
-        print("Valor em Reais calculado sem taxa: R$"+str(reais))
-        vendaSugerida = float("{0:9.5f}".format(vendaSugerida))
+    try:
+        #os.system("clear")
+        print("Ordens criadas no dia: "+str(ordensDia))
+        ordensDia=ordensDia+1
 
         time.sleep(1)
-        sellOrder = PlaceSellOrder("BRLXRP",quantidadeXRP,vendaSugerida,str(int(time.time())))
-        sellOrder_id = sellOrder.getOrderId()
-        print("Ordem de venda criada: "+str(sellOrder_id))
-        print("Aguardando 30 segundos .")
+        AccountInfo = GetAccountInfo(str(int(time.time())))
+        saldoBRL = float(AccountInfo.getBalanceAvailable('brl'))
+        quantidadeXRP = float(AccountInfo.getBalanceAvailable('xrp'))
+
+
+        if saldoBRL>=10.0:
+            time.sleep(1)
+            orderBook = ListOrderBook('BRLXRP',str(int(time.time())))
+            print("############ ORDEN DE COMPRA ############")
+            print("Saldo de Reais: R$"+str(saldoBRL))
+            maiorCompra = float(orderBook.getOrderbookBidsLimitPrice())
+            print("Maior preço de compra do orderbook: "+str(maiorCompra))
+            compraSugerida=float("{0:9.5f}".format(maiorCompra+0.00001))
+            print("Preço de compra sugerido: "+str(compraSugerida))
+            quantidadeXRP=float("{0:9.8f}".format(saldoBRL/compraSugerida)) 
+            print("Quantidade de XRP calculado sem taxa: "+str(quantidadeXRP)) 
+            time.sleep(1)  
+            buyOrder = PlaceBuyOrder('BRLXRP',quantidadeXRP,compraSugerida,str(int(time.time())))
+            buyOrder_id = int(buyOrder.getOrderId())
+            print("Ordem de compra criado: "+str(buyOrder_id))
+            print("Aguardando 30 segundos .")
+            time.sleep(10)
+            print("Aguardando 20 segundos ..")
+            time.sleep(10)
+            print("Aguardando 10 segundos ...")
+            time.sleep(10)
+            ultimaCompra=compraSugerida
+            cancelBuyOrder = CancelOrder("BRLXRP",buyOrder_id,str(int(time.time())))
+            print("Ordem de compra cancelada:")
+            print("\n\n")
+
+        elif quantidadeXRP>=0.1:
+            time.sleep(1)
+            orderBook = ListOrderBook('BRLXRP',str(int(time.time())))
+
+            print("############ ORDEN DE VENDA ############")
+            menorVenda = float(orderBook.getOrderbookAsksLimitPrice())
+            print("Menor preço de venda do orderbook: "+str(menorVenda))
+
+            vendaSugerida = float(ultimaCompra*1.008)
+
+            cont=0
+            while cont<20:
+                menorVenda = float(orderBook.getOrderbookAsksLimitPrice(cont))
+                print("Menor venda com indice: {0} R${1:9.5f}".format(cont,menorVenda))
+                if vendaSugerida<menorVenda:
+                    vendaSugerida=menorVenda-0.00001
+                    break
+                cont=cont+1
+
+            print("Preço de venda sugerido: "+str(vendaSugerida))
+            print("Ultimo preço de compra: R$"+str(ultimaCompra))
+
+            reais = float("{0:9.8f}".format(vendaSugerida*quantidadeXRP))
+            print("Valor em Reais calculado sem taxa: R$"+str(reais))
+            vendaSugerida = float("{0:9.5f}".format(vendaSugerida))
+
+            time.sleep(1)
+            sellOrder = PlaceSellOrder("BRLXRP",quantidadeXRP,vendaSugerida,str(int(time.time())))
+            sellOrder_id = sellOrder.getOrderId()
+            print("Ordem de venda criada: "+str(sellOrder_id))
+            print("Aguardando 30 segundos .")
+            time.sleep(10)
+            print("Aguardando 20 segundos ..")
+            time.sleep(10)
+            print("Aguardando 10 segundos ...")
+            time.sleep(10)
+            cancelar = CancelOrder("BRLXRP",sellOrder_id,str(int(time.time())))
+            print("Ordem de venda cancelada:")
+            print("\n\n")
+
+        else:
+            print("Saldo Insuficiente!!")
+            # Verificar se há alguma ordem aberta 
+            # Fechar e tentar novamente
+            break
+    except:        
+        print("Ocorreu algum erro!!!")
+        print("Aguardará 10 segundos para tentar novamente!")
         time.sleep(10)
-        print("Aguardando 20 segundos ..")
-        time.sleep(10)
-        print("Aguardando 10 segundos ...")
-        time.sleep(10)
-        cancelar = CancelOrder("BRLXRP",sellOrder_id,str(int(time.time())))
-        print("Ordem de venda cancelada:")
-        print("\n\n")
-    
-    else:
-        print("Saldo Insuficiente!!")
-        break
-        
 
 
 '''
