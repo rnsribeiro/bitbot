@@ -52,7 +52,7 @@ while True:
         print("Saldo de Reais: R$"+str(saldoBRL))
         maiorCompra = float(orderBook.getOrderbookBidsLimitPrice())
         print("Maior preço de compra do orderbook: "+str(maiorCompra))
-        compraSugerida=float(maiorCompra+0.0001)
+        compraSugerida=float("{0:9.5f}".format(maiorCompra+0.00001))
         print("Preço de compra sugerido: "+str(compraSugerida))
         quantidadeXRP=float("{0:9.8f}".format(saldoBRL/compraSugerida)) 
         print("Quantidade de XRP calculado sem taxa: "+str(quantidadeXRP)) 
@@ -86,7 +86,7 @@ while True:
             menorVenda = float(orderBook.getOrderbookAsksLimitPrice(cont))
             print("Menor venda com indice: {0} R${1:9.5f}".format(cont,menorVenda))
             if vendaSugerida<menorVenda:
-                vendaSugerida=menorVenda-0.0001
+                vendaSugerida=menorVenda-0.00001
                 break
             cont=cont+1
 
