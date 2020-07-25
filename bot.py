@@ -23,13 +23,14 @@ ordensDia=0
 
 cont=0
 os.system("clear")
+#time.sleep(1)
+listOrders = ListOrders("BRLXRP",str(int(time.time())))
 while True: 
-    print("Buscando tipo de ordem de compra com indice:"+str(cont))   
-    time.sleep(1)
-    listOrders = ListOrders("BRLXRP",str(int(time.time())))
+    print("Buscando tipo de ordem de compra com indice:"+str(cont))    
+    
     if int(listOrders.getOrdersOrderType(cont))==1:        
         ultimaCompra=float(listOrders.getOrdersLimitPrice(cont))
-        print("Valor da ultima compra encontrado: R$"+str(ultimaCompra))        
+        print("Valor da ultima compra encontrado: R${0:9.5f} no indice: {1} ".format(ultimaCompra,cont))              
         break
     cont=cont+1
 
@@ -78,11 +79,12 @@ while True:
         menorVenda = float(orderBook.getOrderbookAsksLimitPrice())
         print("Menor preço de venda do orderbook: "+str(menorVenda))
 
-        vendaSugerida = float(ultimaCompra*1.01)
+        vendaSugerida = float(ultimaCompra*1.008)
 
         cont=0
-        while cont<15:
+        while cont<20:
             menorVenda = float(orderBook.getOrderbookAsksLimitPrice(cont))
+            print("Menor venda com indice: {0} R${1:9.5f}".format(cont,menorVenda))
             if vendaSugerida<menorVenda:
                 vendaSugerida=menorVenda-0.0001
                 break
