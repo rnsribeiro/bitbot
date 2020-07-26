@@ -1,3 +1,4 @@
+# coding: latin1
 import hashlib
 import hmac
 import json

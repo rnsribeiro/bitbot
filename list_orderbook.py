@@ -1,3 +1,4 @@
+# coding: latin1
 '''
 	Descrição
 	Retorna informações do livro de negociações

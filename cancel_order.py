@@ -1,3 +1,4 @@
+# coding: latin1
 '''
 cancel_order Descrição:
 Cancela uma ordem, de venda ou compra, de acordo com o ID e par de moedas informado.

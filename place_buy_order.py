@@ -1,3 +1,4 @@
+# coding: latin1
 '''
      Abre uma ordem de compra (buy ou bid) do par de moedas, quantidade de moeda digital e preço 
     unitário limite informados. A criação contempla o processo de confrontamento da ordem com o

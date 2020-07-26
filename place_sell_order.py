@@ -1,3 +1,4 @@
+# coding: latin1
 '''
 place_sell_order Descrição:
 Abre uma ordem de venda (sell ou ask) do par de moedas, 

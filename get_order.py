@@ -1,4 +1,4 @@
-
+# coding: latin1
 '''
 	Descrição:
 	Retorna os dados da ordem de acordo com o ID informado.

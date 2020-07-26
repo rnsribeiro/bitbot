@@ -1,3 +1,4 @@
+# coding: latin1
 '''
     Passos para operação do bot
         Passo 1:Obter o saldo na conta em Reais
