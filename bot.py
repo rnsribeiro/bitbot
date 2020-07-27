@@ -1,4 +1,4 @@
-# coding: latin1
+# -*- coding: utf-8 -*-
 '''
     Passos para operação do bot
         Passo 1:Obter o saldo na conta em Reais
@@ -22,10 +22,12 @@ from datetime import datetime
 
 inicioBot = str(datetime.fromtimestamp(time.time()).strftime('%d-%m-%Y %H:%M:%S'))
 
-print("\tObtendo o valor da última Compra ...")
+file = open('out', 'a')
+file.write("Obtendo o valor da última Compra ...")
 l = ListOrders('BRLXRP',str(int(time.time())),4,1)
 ultimaCompra = l.getOrdersLimitPrice()
-print("\tValor da última Compra: R$"+str(ultimaCompra))   
+file.write("Valor da última Compra: R$"+str(ultimaCompra))
+file.close()
 
 ordensDia=0
 
@@ -39,9 +41,11 @@ while True:
     try:
         #os.system("clear")
         # Cabeçalho e alteração de cor para amarelo
-        print("\t"+"\033[33m"+"Bot Iniciado: "+inicioBot)
-        print("\tOperação Iniciada: "+str(datetime.fromtimestamp(time.time()).strftime('%d-%m-%Y %H:%M:%S')))
-        print("\tOrdens criadas no dia: "+str(ordensDia)+"\033[0;0m")
+        file = open('out','a')
+        file.write("\n\nBot Iniciado: "+inicioBot)
+        file.write("\nOperação Iniciada: "+str(datetime.fromtimestamp(time.time()).strftime('%d-%m-%Y %H:%M:%S')))
+        file.write("\nOrdens criadas no dia: "+str(ordensDia)+"\n\n")
+        file.close()
 
         ordensDia=ordensDia+1
 
@@ -54,79 +58,117 @@ while True:
         if saldoBRL>=10.0:
             time.sleep(1)
             orderBook = ListOrderBook('BRLXRP',str(int(time.time())))
-            print("\t"+'\033[32m'+"############ ORDEN DE COMPRA ############"+'\033[0;0m')
-            print("\tValor da última Compra: R$"+str(ultimaCompra))   
-            print("\tSaldo de Reais: R$"+str(saldoBRL))
+            file = open('out','a')
+            file.write("\n############ ORDEN DE COMPRA ############")
+            file.write("\nValor da última Compra: R$"+str(ultimaCompra))   
+            file.write("\nSaldo de Reais: R$"+str(saldoBRL))
+            file.close()
             maiorCompra = float(orderBook.getOrderbookBidsLimitPrice())
-            print("\tMaior preço de compra do orderbook: "+str(maiorCompra))
+            file = open('out','a')
+            file.write("\nMaior preço de compra do orderbook: "+str(maiorCompra))
+            file.close()
             compraSugerida=float("{0:9.5f}".format(maiorCompra+0.00001))            
-            compraSugerida=1.1008
-            print("\tPreço de compra sugerido: "+str(compraSugerida))
-            quantidadeXRP=float("{0:9.8f}".format(saldoBRL/compraSugerida)) 
-            print("\tQuantidade de XRP calculado sem taxa: "+str(quantidadeXRP)) 
+            compraSugerida=1.12001
+            file = open('out','a')
+            file.write("\nPreço de compra sugerido: "+str(compraSugerida))
+            file.close()
+            quantidadeXRP=float("{0:9.8f}".format(saldoBRL/compraSugerida))
+            file = open('out','a')
+            file.write("\nQuantidade de XRP calculado sem taxa: "+str(quantidadeXRP))
+            file.close()
             time.sleep(1)  
             buyOrder = PlaceBuyOrder('BRLXRP',quantidadeXRP,compraSugerida,str(int(time.time())))
             buyOrder_id = int(buyOrder.getOrderId())
-            print("\tOrdem de compra criado: "+str(buyOrder_id))
-            print("\tAguardando 60 segundos .")
+            file = open('out','a')
+            file.write("\nOrdem de compra criado: "+str(buyOrder_id))
+            file.write("\nAguardando 60 segundos .")
+            file.close()
             time.sleep(20)
-            print("\tAguardando 40 segundos ..")
+            file = open('out','a')
+            file.write("\nAguardando 40 segundos ..")
+            file.close()
             time.sleep(20)
-            print("\tAguardando 20 segundos ...")
+            file = open('out','a')
+            file.write("\nAguardando 20 segundos ...")
+            file.close()
             time.sleep(20)
             ultimaCompra=compraSugerida
             cancelBuyOrder = CancelOrder("BRLXRP",buyOrder_id,str(int(time.time())))
-            print("\tOrdem de compra cancelada:")
-            print("\n\n")
+            file = open('out','a')
+            file.write("\nOrdem de compra cancelada:\n\n")
+            file.close()
 
         elif quantidadeXRP>=0.1:
             time.sleep(1)
             orderBook = ListOrderBook('BRLXRP',str(int(time.time())))
-            print("\t"+'\033[31m'+"############ ORDEN DE VENDA ############"+'\033[0;0m')
+            file = open('out','a')
+            file.write("\n############ ORDEN DE VENDA ############")
+            file.close()
             menorVenda = float(orderBook.getOrderbookAsksLimitPrice())
-            print("\tMenor preço de venda do orderbook: "+str(menorVenda))
-            vendaSugerida = float(float(ultimaCompra)*1.008)
+            file = open('out','a')
+            file.write("\nMenor preço de venda do orderbook: "+str(menorVenda))
+            file.close()
+            vendaSugerida = float(float(ultimaCompra)*1.01)
             cont=0
             while cont<20:
                 menorVenda = float(orderBook.getOrderbookAsksLimitPrice(cont))
-                print("\tMenor venda com indice: {0} R${1:9.5f}".format(cont,menorVenda))
+                file = open('out','a')
+                file.write("\nMenor venda com indice: {0} R${1:9.5f}".format(cont,menorVenda))
+                file.close()
                 if vendaSugerida<menorVenda:
                     vendaSugerida=menorVenda-0.00001
                     break
                 cont=cont+1
-            print("\tPreço de venda sugerido: "+"{0:9.8f}".format(vendaSugerida))
-            print("\n\tUltimo preço de compra: R$"+str(ultimaCompra))
+            file = open('out','a')
+            file.write("\nPreço de venda sugerido: "+"{0:9.8f}".format(vendaSugerida))
+            file.write("\nUltimo preço de compra: R$"+str(ultimaCompra))
+            file.close()
             reais = float("{0:9.8f}".format(vendaSugerida*quantidadeXRP))
-            print("\tValor em Reais calculado sem taxa: R$"+str(reais))
-            #vendaSugerida = float("{0:9.5f}".format(vendaSugerida))
-            vendaSugerida = 1.12
+            file = open('out','a')
+            file.write("\nValor em Reais calculado sem taxa: R$"+str(reais))
+            file.close()
+            vendaSugerida = float("{0:9.5f}".format(vendaSugerida))
+            #vendaSugerida = 1.12
             time.sleep(1)
             sellOrder = PlaceSellOrder("BRLXRP",quantidadeXRP,vendaSugerida,str(int(time.time())))
             sellOrder_id = sellOrder.getOrderId()
-            print("\tOrdem de venda criada: "+str(sellOrder_id))
-            print("\tAguardando 60 segundos .")
+            file = open('out','a')
+            file.write("\nOrdem de venda criada: "+str(sellOrder_id))
+            file.write("\nAguardando 60 segundos .")
+            file.close()
             time.sleep(20)
-            print("\tAguardando 40 segundos ..")
+            file = open('out','a')
+            file.write("\nAguardando 40 segundos ..")
+            file.close()
             time.sleep(20)
-            print("\tAguardando 20 segundos ...")
+            file = open('out','a')
+            file.write("\nAguardando 20 segundos ...")
+            file.close()
             time.sleep(20)
             cancelar = CancelOrder("BRLXRP",sellOrder_id,str(int(time.time())))
-            print("\tOrdem de venda cancelada:")
-            print("\n\n")
+            file = open('out','a')
+            file.write("\nOrdem de venda cancelada:"+sellOrder_id+"\n\n")
+            file.close()            
         else:
-            print("\tVerificando se há ordens abertas...")
+            file = open('out','a')
+            file.write("\nVerificando se há ordens abertas...")
+            file.close()
             l = ListOrders('BRLXRP',str(int(time.time())),2)
             if int(l.getOrdersStatus()) == 2:
-                print("\tHá ordens abertas com ID: "+str(l.getOrdersId()))
+                file = open('out','a')
+                file.write("\nHá ordens abertas com ID: "+str(l.getOrdersId()))
+                file.close()
                 time.sleep(1)
                 cancelar = CancelOrder("BRLXRP",l.getOrdersId(),str(int(time.time())))
-                print("\tOrdem Cancelada.\n\tTentar Novamente.")
-                print("\n\n")
+                file = open('out','a')
+                file.write("\nOrdem Cancelada.\nTentando Novamente.\n\n")
+                file.close()                
 
 
     except :        
-        print("\tOcorreu algum erro!!!")
-        print("\tAguardará 10 segundos para tentar novamente!")
-        print("\n\n")
-        time.sleep(10)
+        file = open('out','a')
+        file.write("\nOcorreu algum erro!!!")
+        file.write("\nTentando novamente em 5 segundos!...")
+        file.close()
+        time.sleep(5)
 

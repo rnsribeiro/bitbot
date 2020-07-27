@@ -1,4 +1,4 @@
-# coding: latin1
+# -*- coding: utf-8 -*-
 from place_sell_order import PlaceSellOrder
 from cancel_order import CancelOrder
 import time

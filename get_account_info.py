@@ -1,4 +1,4 @@
-# coding: latin1
+# -*- coding: utf-8 -*-
 '''
 get_account_info Descrição:
 Retorna dados da conta, como saldos das moedas (Real, BCash, Bitcoin, Ethereum, Litecoin e XRP),
