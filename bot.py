@@ -59,8 +59,8 @@ while True:
             print("\tSaldo de Reais: R$"+str(saldoBRL))
             maiorCompra = float(orderBook.getOrderbookBidsLimitPrice())
             print("\tMaior preço de compra do orderbook: "+str(maiorCompra))
-            compraSugerida=float("{0:9.5f}".format(maiorCompra+0.00001))
-            #compraSugerida=1.11
+            compraSugerida=float("{0:9.5f}".format(maiorCompra+0.00001))            
+            compraSugerida=1.1008
             print("\tPreço de compra sugerido: "+str(compraSugerida))
             quantidadeXRP=float("{0:9.8f}".format(saldoBRL/compraSugerida)) 
             print("\tQuantidade de XRP calculado sem taxa: "+str(quantidadeXRP)) 
@@ -98,7 +98,8 @@ while True:
             print("\n\tUltimo preço de compra: R$"+str(ultimaCompra))
             reais = float("{0:9.8f}".format(vendaSugerida*quantidadeXRP))
             print("\tValor em Reais calculado sem taxa: R$"+str(reais))
-            vendaSugerida = float("{0:9.5f}".format(vendaSugerida))
+            #vendaSugerida = float("{0:9.5f}".format(vendaSugerida))
+            vendaSugerida = 1.12
             time.sleep(1)
             sellOrder = PlaceSellOrder("BRLXRP",quantidadeXRP,vendaSugerida,str(int(time.time())))
             sellOrder_id = sellOrder.getOrderId()
