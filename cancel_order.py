@@ -1,9 +1,14 @@
 # -*- coding: utf-8 -*-
 '''
-cancel_order Descrição:
-Cancela uma ordem, de venda ou compra, de acordo com o ID e par de moedas informado.
-O retorno contempla o sucessoo ou não do cancelamento, bem como os dados e status
-atuais da ordem. Somente ordens pertencentes ao próprio usuário podem ser canceladas.
+Created on 10 de julho de 2020
+
+@author: Rodrigo Nunes
+@author: Arnaldo Nunes
+
+	cancel_order Descrição:
+	Cancela uma ordem, de venda ou compra, de acordo com o ID e par de moedas informado.
+	O retorno contempla o sucessoo ou não do cancelamento, bem como os dados e status
+	atuais da ordem. Somente ordens pertencentes ao próprio usuário podem ser canceladas.
 '''
 
 import hashlib

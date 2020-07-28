@@ -1,4 +1,18 @@
 # -*- coding: utf-8 -*-
+
+'''
+Created on 10 de julho de 2020
+
+@author: Rodrigo Nunes
+@author: Arnaldo Nunes
+
+	Descrição
+	Retorna uma lista de até 200 ordens, de acordo com os filtros informados,
+	ordenadas pela data de última atualização. As operações executadas de cada
+	ordem também são retornadas. Apenas ordens que pertencem ao proprietário da
+	chave da TAPI são retornadas. Caso nenhuma ordem seja encontrada, é retornada
+	uma lista vazia.
+'''
 import hashlib
 import hmac
 import json

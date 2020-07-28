@@ -1,5 +1,10 @@
 # -*- coding: utf-8 -*-
 '''
+Created on 10 de julho de 2020
+
+@author: Rodrigo Nunes
+@author: Arnaldo Nunes
+
 	Descrição:
 	Retorna os dados da ordem de acordo com o ID informado.
 	Dentre os dados estão as informações das Operações executadas dessa ordem.

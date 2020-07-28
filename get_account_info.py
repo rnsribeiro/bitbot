@@ -1,9 +1,14 @@
 # -*- coding: utf-8 -*-
 '''
-get_account_info Descrição:
-Retorna dados da conta, como saldos das moedas (Real, BCash, Bitcoin, Ethereum, Litecoin e XRP),
-saldos considerando retenção em ordens abertas, quantidades de ordens abertas por moeda digital,
-limites de saque/transferências das moedas.
+Created on 10 de julho de 2020
+
+@author: Rodrigo Nunes
+@author: Arnaldo Nunes
+
+	get_account_info Descrição:
+	Retorna dados da conta, como saldos das moedas (Real, BCash, Bitcoin, Ethereum, Litecoin e XRP),
+	saldos considerando retenção em ordens abertas, quantidades de ordens abertas por moeda digital,
+	limites de saque/transferências das moedas.
 '''
 
 import hashlib

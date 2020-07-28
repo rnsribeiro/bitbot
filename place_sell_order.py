@@ -1,11 +1,17 @@
 # -*- coding: utf-8 -*-
+
 '''
-place_sell_order Descrição:
-Abre uma ordem de venda (sell ou ask) do par de moedas, 
-quantidade de moeda digital e preço unitário limite informados.
-A criação contempla o processo de confrontamento da ordem com o livro de negociações.
-Assim, a resposta pode informar se a ordem foi executada (parcialmente ou não)
-imediatamente após sua criação e, assim, se segue ou não aberta e ativa no livro.
+Created on 10 de julho de 2020
+
+@author: Rodrigo Nunes
+@author: Arnaldo Nunes
+
+    place_sell_order Descrição:
+    Abre uma ordem de venda (sell ou ask) do par de moedas, 
+    quantidade de moeda digital e preço unitário limite informados.
+    A criação contempla o processo de confrontamento da ordem com o livro de negociações.
+    Assim, a resposta pode informar se a ordem foi executada (parcialmente ou não)
+    imediatamente após sua criação e, assim, se segue ou não aberta e ativa no livro.
 '''
 
 import hashlib

@@ -1,4 +1,16 @@
 # -*- coding: utf-8 -*-
+
+'''
+Created on 10 de julho de 2020
+
+@author: Rodrigo Nunes
+@author: Arnaldo Nunes
+
+	tapi_mac: Descrição:
+	Gera um hash com base no sha512
+'''
+
+
 import hashlib
 import hmac
 import sys

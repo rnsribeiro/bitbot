@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
 '''
-Created on 12 de dez de 2015
+Created on 10 de julho de 2020
 
-@author: shadow
-'''
-''' Retorna a chave do usuario que deve ser definida no
+@author: Rodrigo Nunes
+@author: Arnaldo Nunes
+
+    Retorna a chave do usuario que deve ser definida no
     site mercadobitcoin.net essa chave nao deve ser
     tornado publico por questoes de seguranca. '''
 id = 'c3defcf6d4aa97f331e32d6651906687'

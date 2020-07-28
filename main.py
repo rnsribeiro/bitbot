@@ -1,13 +1,10 @@
 # -*- coding: utf-8 -*-
-from place_sell_order import PlaceSellOrder
-from cancel_order import CancelOrder
-import time
-
-sell = PlaceSellOrder('BRLXRP',0.1,1.081,)
-time.sleep(30)
-cancelarOrdem = CancelOrder('XRPBRL',sell.getOrderId())
-
 '''
+Created on 10 de julho de 2020
+
+@author: Rodrigo Nunes
+@author: Arnaldo Nunes
+
     Passos para operação do bot
         Passo 1:Obter o saldo na conta em Reais
         Passo 2:Obter o maior preço de compra da moeda
@@ -18,5 +15,15 @@ cancelarOrdem = CancelOrder('XRPBRL',sell.getOrderId())
         Passo 7:Realizar uma ordem de venda
         Passo 8:voltar ao passo 1
 '''
+
+from place_sell_order import PlaceSellOrder
+from cancel_order import CancelOrder
+import time
+
+sell = PlaceSellOrder('BRLXRP',0.1,1.081,)
+time.sleep(30)
+cancelarOrdem = CancelOrder('XRPBRL',sell.getOrderId())
+
+
 
 
