@@ -221,7 +221,7 @@ while True:
             # Cancela a ordem
             cancelOrder(moeda,sell_id)
             f = open(file,'a')
-            f.write("Ordem de venda cancelada:\n")
+            f.write("Ordem de venda cancelada:\n\n")
             f.close()            
     
         if saldoBRL>=10.0:    
@@ -239,7 +239,7 @@ while True:
             # Cancela a ordem
             cancelOrder(moeda,buy_id)
             f = open(file,'a')
-            f.write("Ordem de compra cancelada:\n")
+            f.write("Ordem de compra cancelada:\n\n")
             f.close()
 
         if saldoBRL<10.0 and qtdCoin<0.1:
