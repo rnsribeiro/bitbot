@@ -42,8 +42,6 @@ except:
     print("É necessário passar um argumento spreed como parâmetro ex: 0.006")
     exit()
 
-
-
 # Contador para ordens do inicio do bot
 ordensDia=0
 
@@ -62,8 +60,8 @@ def buy(coin_pair,saldo):
 
     # Abre o arquivo e insere as informações nele
     f = open(file,'a')
-    f.write("############ ORDEN DE COMPRA ############\n")
-    f.write("Saldo de Reais: R$"+str(saldo)+"\n")
+    print("############ ORDEN DE COMPRA ############\n")
+    print("Saldo de Reais: R$"+str(saldo)+"\n")
     f.close()
 
     # Menor preço de vendo do orderbook
@@ -73,13 +71,13 @@ def buy(coin_pair,saldo):
     priceBuy=float("{0:9.5f}".format(priceSell*(1.0-spreed)))            
     
     f = open(file,'a')
-    f.write("Preço de compra: "+str(priceBuy)+"\n")
+    print("Preço de compra: "+str(priceBuy)+"\n")
     f.close()
 
     # Calcula a quantidade a ser comprada
     quantidade=float("{0:9.8f}".format(saldo/priceBuy))
     f = open(file,'a')
-    f.write("Quantidade da moeda a ser comprada: "+str(quantidade)+"\n")
+    print("Quantidade da moeda a ser comprada: "+str(quantidade)+"\n")
     f.close()
 
     # Executa a ordem de compra
@@ -100,7 +98,7 @@ def sell(coin_pair,saldo,lastBuy):
     
     # Insere informações no arquivo out
     f = open(file,'a')
-    f.write("############ ORDEN DE VENDA ############\n")
+    print("############ ORDEN DE VENDA ############\n")
     f.close()    
     
     # Calcula o preço de venda
@@ -108,8 +106,8 @@ def sell(coin_pair,saldo,lastBuy):
 
     # Exibe no arquivo out o preço de venda e o preço da ultima compra.
     f = open(file,'a')
-    f.write("Preço de venda: "+"{0:9.8f}".format(priceSell)+"\n")
-    f.write("Preço da última compra: R$"+str(lastBuy)+"\n")
+    print("Preço de venda: "+"{0:9.8f}".format(priceSell)+"\n")
+    print("Preço da última compra: R$"+str(lastBuy)+"\n")
     f.close()
 
     # Calcula o valor em Reais com base no preço de venda e o saldo da moeda.
@@ -118,7 +116,7 @@ def sell(coin_pair,saldo,lastBuy):
     # Exibe as informações no arquivo out
     # Mostrando o valor em Reais já com a taxa descontada
     f = open(file,'a')
-    f.write("Valor em Reais calculado descontando a taxa: R$"+str(reais)+"\n")
+    print("Valor em Reais calculado descontando a taxa: R$"+str(reais)+"\n")
     f.close()
 
     # Formata o preço de venda para 5 casas decimais
@@ -134,12 +132,11 @@ def sell(coin_pair,saldo,lastBuy):
 
 while True:
     try:
-
         # Cabeçalho
         f = open(file,'a')
-        f.write("\nBot Iniciado: "+inicioBot+"\n")
-        f.write("Ordens criadas no dia: "+str(ordensDia)+"\n")
-        f.write("Operação Iniciada: "+str(datetime.fromtimestamp(time.time()).strftime('%d-%m-%Y %H:%M:%S'))+"\n")
+        print("\nBot Iniciado: "+inicioBot+"\n")
+        print("Ordens criadas no dia: "+str(ordensDia)+"\n")
+        print("Operação Iniciada: "+str(datetime.fromtimestamp(time.time()).strftime('%d-%m-%Y %H:%M:%S'))+"\n")
         f.close()
     
         # Contador para ordens criadas no dia
@@ -147,11 +144,11 @@ while True:
     
         # Exibe o cabeçalho no arquivo out
         f = open(file, 'a')
-        f.write("Obtendo o valor da última Compra ...\n")
+        print("Obtendo o valor da última Compra ...\n")
         time.sleep(1)
         l = ListOrders(moeda,str(int(time.time())),4,1)
         ultimaCompra = l.getOrdersLimitPrice()
-        f.write("Valor da última Compra: R$"+str(ultimaCompra)+"\n")
+        print("Valor da última Compra: R$"+str(ultimaCompra)+"\n")
         f.close()
         time.sleep(1)
 
@@ -161,74 +158,73 @@ while True:
 
         # Exibe o saldo das moedas
         f = open(file,'a')
-        f.write("Saldo em Reais: R$"+str(saldoBRL)+"\n")
-        f.write("Saldo em Coin: R$"+str(qtdCoin)+"\n")
+        print("Saldo em Reais: R$"+str(saldoBRL)+"\n")
+        print("Saldo em Coin: R$"+str(qtdCoin)+"\n")
         f.close()
 
         if qtdCoin>=0.1:
             # Executa uma ordem de venda, obtém o ID e aguarda 20 segundos
             f = open(file,'a')
-            f.write("\n\nIniciando ordem de venda...\n")        
+            print("\n\nIniciando ordem de venda...\n")        
             sell_id = sell(moeda,qtdCoin,ultimaCompra)
-            f.write("Ordem de venda criada com id: "+str(sell_id)+"\n")
+            print("Ordem de venda criada com id: "+str(sell_id)+"\n")
             f.close()
             f = open(file,'a')
-            f.write("Aguardando 1 minuto...\n")
+            print("Aguardando 1 minuto...\n")
             f.close()
             time.sleep(60)
         
             # Cancela a ordem
             cancelOrder(moeda,sell_id)
             f = open(file,'a')
-            f.write("Ordem de venda cancelada:\n")
+            print("Ordem de venda cancelada:\n")
             f.close()
     
-        elif saldoBRL>=10.0:
-    
+        elif saldoBRL>=10.0:    
             # Executa uma ordem de compra, obtém o ID e aguarda 20 segundos
             f = open(file,'a')
-            f.write("\n\nIniciando ordem de compra...\n")
+            print("\n\nIniciando ordem de compra...\n")
             buy_id = buy(moeda,saldoBRL)
-            f.write("Ordem de compra criada com id: "+str(buy_id)+"\n")
+            print("Ordem de compra criada com id: "+str(buy_id)+"\n")
             f.close()
             f = open(file,'a')
-            f.write("Aguardando 20 segundos...\n")
+            print("Aguardando 20 segundos...\n")
             f.close()
             time.sleep(20)
     
             # Cancela a ordem
             cancelOrder(moeda,buy_id)
             f = open(file,'a')
-            f.write("Ordem de compra cancelada:\n")
+            print("Ordem de compra cancelada:\n")
             f.close()
         else:
             # Verifica se há ordens abertas
             f = open(file,'a')
-            f.write("\nVerificando se há ordens abertas...\n")
+            print("\nVerificando se há ordens abertas...\n")
             f.close()
             try:
                 time.sleep(1)
                 l = ListOrders(moeda,str(int(time.time())),2)
                 if int(l.getOrdersStatus()) == 2:
                     f = open(file,'a')
-                    f.write("Há ordens abertas com ID: "+str(l.getOrdersId())+"\n")
+                    print("Há ordens abertas com ID: "+str(l.getOrdersId())+"\n")
                     f.close()
                     time.sleep(1)
                     cancelOrder(moeda,l.getOrdersId())
                     f = open(file,'a')
-                    f.write("Ordem Cancelada.\n")
+                    print("Ordem Cancelada.\n")
                     f.close()
             except:
                 f = open(file,'a')
-                f.write("Não há ordens abertas.\n")
+                print("Não há ordens abertas.\n")
                 f.close()
             f=open(file,'a')
-            f.write("Tentando Novamente.\n\n")
+            print("Tentando Novamente.\n\n")
             f.close()
 
     except :        
         f = open(file,'a')
-        f.write("\nOcorreu algum erro!!!\n")
-        f.write("Tentando novamente em 3 segundos!...\n")
+        print("\nOcorreu algum erro!!!\n")
+        print("Tentando novamente em 3 segundos!...\n")
         f.close()
         time.sleep(3)
