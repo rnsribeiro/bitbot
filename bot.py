@@ -71,7 +71,7 @@ def buy(coin_pair,saldo):
 
     # Abre o arquivo e insere as informações nele
     f = open(file,'a')
-    f.write("############ ORDEN DE COMPRA ############\n")
+    f.write("\n############ ORDEN DE COMPRA ############\n")
     f.write("Saldo de Reais: R$"+str(saldo)+"\n")
     f.close()
 
@@ -124,7 +124,7 @@ def sell(coin_pair,saldo,lastBuy):
         
     # Insere informações no arquivo out
     f = open(file,'a')
-    f.write("############ ORDEN DE VENDA ############\n")
+    f.write("\n############ ORDEN DE VENDA ############\n")
     f.close()    
     
     # Calcula o preço de venda
