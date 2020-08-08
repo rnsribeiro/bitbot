@@ -177,7 +177,7 @@ while True:
     try:
         # Cabeçalho
         f = open(file,'a')
-        f.write("#############################################\n")
+        f.write("#########################################\n")
         f.write("Bot Iniciado: "+inicioBot+"\n")
         f.write("Ordens criadas no dia: "+str(ordensDia)+"\n")
         f.write("Operação Iniciada: "+str(datetime.fromtimestamp(time.time()).strftime('%d-%m-%Y %H:%M:%S'))+"\n\n")
@@ -207,7 +207,7 @@ while True:
         f.write("Spreed definido pelo usuário para compra: "+str(float("{0:9.2f}".format(spreedBuy*100)))+"%\n")
         f.write("Spreed definido pelo usuário para venda: "+str(float("{0:9.2f}".format(spreedSell*100)))+"%\n")
         f.write("Spreed definido pelo orderbook: "+str(spreedOrderbook(moeda))+"%\n")
-        f.write("#############################################\n")
+        f.write("#########################################\n")
         f.close()
 
         if qtdCoin>=0.1:
