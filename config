@@ -2,7 +2,7 @@
 # 1 para ativo e 0 para inativo, se o bot estiver ativo funcionará normalmente
 # mas se tiver inativo irá cancelar qualquer ordem
 # e não criará mais até se tornar ativo denovo.
-active=0
+active=1
 
 # par de moedas usada para negociação
 coinpair=BRLXRP
@@ -11,16 +11,17 @@ coinpair=BRLXRP
 coin=xrp
 
 # define o preço de compra
-buy=1.66
+buy=1.7
 
 # define o preço de venda
-sell=1.77
+sell=1.75
 
 # define o stoploss
-stoploss=1.65
+stoploss=1.6504
 
 # define um valor de resistência, se atingir esse valor inicia uma ordem de compra
-resistence=1.67
+resistence=1.77
 
-# define um stop movel para quando romper a resistência e sobe o preço para o percentual definido.
-stopmovel=1
+# define um stop movel para quando romper a resistência e sobe o preço para o percentual definido
+# com base no preço atual
+stopmovel=2
