@@ -2,13 +2,13 @@
 # 1 para ativo e 0 para inativo, se o bot estiver ativo funcionará normalmente
 # mas se tiver inativo irá cancelar qualquer ordem
 # e não criará mais até se tornar ativo denovo.
-active=1
+active=0
 
 # par de moedas usada para negociação
-coinpair='BRLXRP'
+coinpair=BRLXRP
 
 # moeda alvo da negociação
-coin='xrp'
+coin=xrp
 
 # define o preço de compra
 buy=1.66

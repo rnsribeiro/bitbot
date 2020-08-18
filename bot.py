@@ -29,6 +29,15 @@ from list_orders import ListOrders
 from datetime import datetime
 from trades import Trades
 
+# altera o arquivo config
+def replaceStringFile(str1='',str2=''):
+        file = open('config','r')
+        string = file.read()
+        file.close()        
+        file = open('config','w')
+        file.write(string.replace(str1,str2))
+        file.close()
+
 # Obtém a hora de inicio do bot e cria um arquivo out com base na data.
 inicioBot = str(datetime.fromtimestamp(time.time()).strftime('%d-%m-%Y %H:%M:%S'))
 
@@ -121,11 +130,3 @@ while True:
                 # tornar o bot inativo
                 replaceStringFile('active=1','active=0')
 
-# altera o arquivo
-def replaceStringFile(str1='',str2=''):
-        file = open('config','r')
-        string = file.read()
-        file.close()        
-        file = open('config','w')
-        file.write(string.replace(str1,str2))
-        file.close()
