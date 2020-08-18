@@ -331,10 +331,28 @@ while True:
                 f.write("\tAguardando novas ordens.\n")
                 f.close()
         if active==0:
+                time.sleep(1)
                 f = open(file,'a')
+                try:
+                        # lista ordens de vendas abertas
+                        l = ListOrders(coinpair,str(int(time.time())),2)                        
+                        # enquanto tiver ordens abertas
+                        if int(l.getOrdersStatus()) == 2:
+                                f.write("\tOrdens abertas com ID: "+str(l.getOrdersId())+"\n")
+                                time.sleep(1)
+                                try:
+                                        cancelOrder = CancelOrder(coinpair,l.getOrdersId(),str(int(time.time())))
+                                        f.write("\tOrdem Cancelada.\n")
+                                except:
+                                        f.write("############## ERRO ##############\n")
+                                        f.write("\tErro ao tentar cancelar a ordem.\n")
+                                        f.write("\tNa linha 342 do arquivo.\n") 
+                except:
+                        f.write("\n############### AVISO ###############\n")
+                        f.write("\tNão há ordens abertas.\n")
+
                 f.write("\n############### BOT DESATIVADO ###############\n")
                 f.write("\tAguardando novas ordens.\n")
                 f.write("##############################################\n")
                 f.close()
                 time.sleep(10)
-
