@@ -11,10 +11,10 @@ coinpair=BRLXRP
 coin=xrp
 
 # define o preço de compra
-buy=1.7
+buy=1.69
 
 # define o preço de venda
-sell=1.75
+sell=1.722
 
 # define o stoploss
 stoploss=1.6504
