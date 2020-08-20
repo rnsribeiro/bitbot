@@ -78,10 +78,13 @@ while True:
         coin = cfg.get('conf','coin')
         coinpair = cfg.get('conf','coinpair')
 
+        perGain = float(((priceSell-priceBuy)/priceBuy)*100)
+
         f = open(file,'a')
         f.write("\tAtivo: "+str(active)+"\n")
         f.write("\tPreço de Compra: R$"+str(priceBuy)+"\n")
         f.write("\tPreço de Venda: R$"+str(priceSell)+"\n")
+        f.write("\tDiferença entre compra e venda: "+str(perGain)+"%\n")
         f.write("\tStop Loss: R$"+str(stoploss)+"\n")
         f.write("\tResistência: R$"+str(res)+"\n")
         f.write("\tStop Movel: "+str(stopmovel)+"%\n")
@@ -93,7 +96,7 @@ while True:
         except:
                 f.write("############## ERRO ##############\n")
                 f.write("\tErro ao tentar obter o preço atual.\n")
-                f.write("\tNa linha 91 e 92 do arquivo.\n")
+                f.write("\tNa linha 94 e 95 do arquivo.\n")
         f.write("\tPreço atual: R$"+str(currentPrice)+"\n")
         f.close()
 
@@ -108,7 +111,7 @@ while True:
                 f = open(file,'a')
                 f.write("############## ERRO ##############\n")
                 f.write("\tErro ao tentar obter informações da conta.\n")
-                f.write("\tNa linha 104-106 do arquivo.\n")
+                f.write("\tNa linha 107-109 do arquivo.\n")
                 f.close()
 
 
@@ -137,7 +140,7 @@ while True:
                         except:
                                 f.write("############## ERRO ##############\n")
                                 f.write("\tErro ao tentar criar ordem de venda.\n")
-                                f.write("\tNa linha 133 e 134 do arquivo.\n")
+                                f.write("\tNa linha 138 e 139 do arquivo.\n")
                         f.close()
                 if saldoBRL>=10.0:
                         qtd=float("{0:9.8f}".format(saldoBRL/priceBuy))
@@ -149,7 +152,7 @@ while True:
                         except:
                                 f.write("############## ERRO ##############\n")
                                 f.write("\tErro ao tentar criar ordem de compra.\n")
-                                f.write("\tNa linha 145 do arquivo.\n")                        
+                                f.write("\tNa linha 150 do arquivo.\n")                        
                         f.close()
                 # Aguarda 10 segundos para verificar o preço novamente
                 time.sleep(10)
@@ -214,13 +217,6 @@ while True:
                                 f.write("\tNa linha 205 do arquivo.\n")
                                 f.close()
                         
-                # tornar o bot inativo
-                f = open(file,'a')
-                f.write("\tDesativando o bot\n")
-                replaceStringFile('active=1','active=0')
-                f.write("\tBot inativo e aguardando novas ordens.\n")
-                f.close()
-                                         
         # se o preço atual estiver acima da resistência
         if currentPrice>=res and active==1:
                 f = open(file,'a')
@@ -323,13 +319,6 @@ while True:
                         f.write("\tNa linha 320 do arquivo.\n")
                 f.close()
 
-
-                # tornar o bot inativo
-                f = open(file,'a')
-                f.write("\tDesativando o Bot.\n")
-                replaceStringFile('active=1','active=0')
-                f.write("\tAguardando novas ordens.\n")
-                f.close()
         if active==0:
                 time.sleep(1)
                 f = open(file,'a')
