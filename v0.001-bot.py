@@ -18,6 +18,7 @@ import time
 import os
 import sys
 import threading
+import configparser
 from get_account_info import GetAccountInfo
 from list_orderbook import ListOrderBook
 from place_sell_order import PlaceSellOrder
@@ -37,8 +38,11 @@ moeda='BRLXRP'
 # Obtém a percentagem do spreed passado por parâmetro na linha de comando.
 # Em caso de erro exibe a mensagem e encerra o script.
 try:
-    spreedBuy=float(sys.argv[1])
-    spreedSell=float(sys.argv[2])    
+    # Obtém as informações de configuração do bot
+    cfg = configparser.ConfigParser()
+    cfg.read('config')
+    spreedBuy=cfg.getfloat('spreed','buy')
+    spreedSell=cfg.getfloat('spreed','sell')
 except:
     print("É necessário passar dois argumento spreed como parâmetro")
     print("Um para compra e outro pra venda:")

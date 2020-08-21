@@ -25,3 +25,7 @@ resistence=1.77
 # define um stop movel para quando romper a resistência e sobe o preço para o percentual definido
 # com base no preço atual
 stopmovel=2
+
+[spreed]
+buy=0.01
+sell=0.008
