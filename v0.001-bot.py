@@ -46,7 +46,7 @@ try:
 except:
     print("É necessário passar dois argumento spreed como parâmetro")
     print("Um para compra e outro pra venda:")
-    print("Ex: bot.py 0.01 0.008")
+    print("Edite o arquivo config na seção spreed.")
     exit()
 
 # Contador para ordens do inicio do bot
