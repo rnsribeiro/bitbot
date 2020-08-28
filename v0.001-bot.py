@@ -35,19 +35,8 @@ file = "out-"+str(datetime.fromtimestamp(time.time()).strftime('%Y%m%d-%H%M%S'))
 # parâmetro na linha de comando.
 moeda='BRLXRP'
 
-# Obtém a percentagem do spreed passado por parâmetro na linha de comando.
-# Em caso de erro exibe a mensagem e encerra o script.
-try:
-    # Obtém as informações de configuração do bot
-    cfg = configparser.ConfigParser()
-    cfg.read('config')
-    spreedBuy=cfg.getfloat('spreed','buy')
-    spreedSell=cfg.getfloat('spreed','sell')
-except:
-    print("É necessário passar dois argumento spreed como parâmetro")
-    print("Um para compra e outro pra venda:")
-    print("Edite o arquivo config na seção spreed.")
-    exit()
+# Obtém as informações de configuração do bot
+cfg = configparser.ConfigParser()
 
 # Contador para ordens do inicio do bot
 ordensDia=0
@@ -178,6 +167,18 @@ def sell(coin_pair,saldo,lastBuy):
     return sellOrder_id 
 
 while True:
+    # Obtém a percentagem do spreed passado por parâmetro no arquivo.
+    # Em caso de erro exibe a mensagem e encerra o script.
+    try:        
+        cfg.read('config')
+        spreedBuy=cfg.getfloat('spreed','buy')
+        spreedSell=cfg.getfloat('spreed','sell')
+    except:
+        print("É necessário passar dois argumento spreed como parâmetro")
+        print("Um para compra e outro pra venda:")
+        print("Edite o arquivo config na seção spreed.")
+        exit()
+
     try:
         # Cabeçalho
         f = open(file,'a')

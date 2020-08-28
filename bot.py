@@ -1,27 +1,18 @@
 # -*- coding: utf-8 -*-
 '''
-Created on 13 de agosto de 2020
+Created on 10 de julho de 2020
 
 @author: Rodrigo Nunes
+@author: Arnaldo Nunes
 
-Version: v0.002
+Version: v0.001
 
-    Esse bot será baseado na observação do gráfico:
-        Todas esses valores devem ser verificados no arquivo config
-        Passo 1:Analisar o gráfico e observar qual os
-                valores de mínimo e máximo de uma determinada faixa do gráfico.
-        Passo 2:Definir um valor de compra da moeda
-        Passo 3:Definir um stoploss para o valor de compra
-                3.1 Se o valor atual for menor ou igual ao stoploss executar
-                uma ordem de venda imediatamente
-        Passo 4:Definir um valor de venda da moeda
-        Passo 5:Definir um valor de resistência para a faixa do gráfico.
-                5.1 Se romper a resistência iniciar o procedimento de compra da moeda.
-                5.2 Se conseguir comprar verificar frequentemente o valor atual e
-                definir um valor de stop price movel
-                        5.2.1 se o valor atual for menor ou igual ao stop price, executar
-                        uma ordem de venda imediatamente.
-
+    Esse bot será baseado no valor do spreed:
+        Passo 1:Obter o valor de compra com base no valor de venda do orderbook
+        Passo 2:Realizar a compra com base no valor de venda - spreed definido pelo usuário
+        Passo 3:Ápos realizar a compra definir o percentual de ganho e fixar o valor de venda        
+        Passo 4:Após realizar a venda
+        Passo 5:voltar ao passo 1
 '''
 import time
 import os
@@ -35,313 +26,259 @@ from place_buy_order import PlaceBuyOrder
 from cancel_order import CancelOrder
 from list_orders import ListOrders
 from datetime import datetime
-from trades import Trades
 
-# altera o arquivo config
-def replaceStringFile(str1='',str2=''):
-        file = open('config','r')
-        string = file.read()
-        file.close()        
-        file = open('config','w')
-        file.write(string.replace(str1,str2))
-        file.close()
-
-# Obtém a hora de inicio do bot e cria um nome de arquivo out com base na data e hora.
+# Obtém a hora de inicio do bot e cria um arquivo out com base na data.
 inicioBot = str(datetime.fromtimestamp(time.time()).strftime('%d-%m-%Y %H:%M:%S'))
 file = "out-"+str(datetime.fromtimestamp(time.time()).strftime('%Y%m%d-%H%M%S'))
 
-# Conta quantos ciclos de execução
-ciclo=0 
+# Moeda a ser usada no script futuramente pode ser passado por
+# parâmetro na linha de comando.
+moeda='BRLXRP'
 
 # Obtém as informações de configuração do bot
 cfg = configparser.ConfigParser()
 
+# Contador para ordens do inicio do bot
+ordensDia=0
+
+# Obtém o spreed em formato percentual do orderbook
+def spreedOrderbook(coin_pair):
+    time.sleep(1)
+    orderBook = ListOrderBook(coin_pair,str(int(time.time())))
+    priceSell = float(orderBook.getOrderbookAsksLimitPrice())
+    priceBuy = float(orderBook.getOrderbookBidsLimitPrice())
+    s = float(((priceSell-priceBuy)/priceSell)*100)
+    #s = float("{0:9.2f}".format(s))
+    return float("{0:9.2f}".format(s))
+    
+# Obtém o menor preço de venda do orderbook
+def menorVenda(coin_pair):
+    time.sleep(1)
+    orderBook = ListOrderBook(coin_pair,str(int(time.time())))
+    priceSell = float(orderBook.getOrderbookAsksLimitPrice())
+    return priceSell
+
+# Realiza uma ordem de compra com base no saldo
+# e retorn o order_id da operação.
+def buy(coin_pair,saldo):    
+    time.sleep(1)
+    # Obtém informações do orderbook com base no coin_pair
+    orderBook = ListOrderBook(coin_pair,str(int(time.time())))
+
+    # Abre o arquivo e insere as informações nele
+    f = open(file,'a')
+    f.write("\n############ ORDEN DE COMPRA ############\n")
+    f.write("Saldo de Reais: R$"+str(saldo)+"\n")
+    f.close()
+
+    # Menor preço de vendo do orderbook
+    priceSell = menorVenda(moeda)
+
+    # Preço de compra sugerido
+    betterBuy=float("{0:9.5f}".format(priceSell*(1.0-spreedBuy)))
+
+    # Obtém informações do orderbook para estabelecer o melhor preço de compra.   
+    cont=0
+    while cont<20:
+        priceBuy = float(orderBook.getOrderbookBidsLimitPrice(cont))
+        f = open(file,'a')
+        f.write("Maior compra com indice: {0} R${1:9.5f}".format(cont,priceBuy)+"\n")
+        f.close()
+        if betterBuy>=priceBuy:
+            betterBuy=priceBuy+0.00001
+            break
+        cont=cont+1        
+    
+    # Formatando o preço de compra para 5 casas decimais
+    betterBuy=float("{0:9.5f}".format(betterBuy))
+
+    f = open(file,'a')
+    f.write("\nMelhor preço de compra: "+str(betterBuy)+"\n")
+    f.close()
+
+    # Calcula a quantidade a ser comprada
+    quantidade=float("{0:9.8f}".format(saldo/betterBuy))
+    f = open(file,'a')
+    f.write("Quantidade da moeda a ser comprada: "+str(quantidade)+"\n")
+    f.close()
+
+    # Executa a ordem de compra
+    time.sleep(1)  
+    buyOrder = PlaceBuyOrder(coin_pair,quantidade,betterBuy,str(int(time.time())))
+    buyOrder_id = int(buyOrder.getOrderId())
+
+    return buyOrder_id
+
+# Cancela uma ordem
+def cancelOrder(coin_pair, order_id):
+    cancelBuyOrder = CancelOrder(coin_pair,order_id,str(int(time.time())))
+
+
+# Realiza uma orderm de venda com base na moeda o saldo e o último preço
+# de compra da moeda
+def sell(coin_pair,saldo,lastBuy):
+        
+    # Insere informações no arquivo out
+    f = open(file,'a')
+    f.write("\n############ ORDEN DE VENDA ############\n")
+    f.close()    
+    
+    # Calcula o preço de venda
+    betterSell = float(float(lastBuy)*(1.0+spreedSell))
+
+    # Obtém informações do orderbook para estabelecer o melhor preço de venda.
+    time.sleep(1)
+    orderBook = ListOrderBook(coin_pair,str(int(time.time())))
+    cont=0
+    while cont<20:
+        priceSell = float(orderBook.getOrderbookAsksLimitPrice(cont))
+        f = open(file,'a')
+        f.write("Menor venda com indice: {0} R${1:9.5f}".format(cont,priceSell)+"\n")
+        f.close()
+        if betterSell<=priceSell:
+            betterSell=priceSell-0.00001
+            break
+        cont=cont+1
+
+    # Exibe no arquivo out o preço de venda e o preço da ultima compra.
+    f = open(file,'a')
+    f.write("Melhor preço de venda: "+"{0:9.8f}".format(betterSell)+"\n")
+    f.write("Preço da última compra: R$"+str(lastBuy)+"\n")
+    f.close()
+
+    # Calcula o valor em Reais com base no preço de venda e o saldo da moeda.
+    reais = float("{0:9.4f}".format((betterSell*saldo)*0.997))
+
+    # Exibe as informações no arquivo out
+    # Mostrando o valor em Reais já com a taxa descontada
+    f = open(file,'a')
+    f.write("Valor em Reais calculado descontando a taxa: R$"+str(reais)+"\n")
+    f.close()
+
+    # Formata o preço de venda para 5 casas decimais
+    betterSell = float("{0:9.5f}".format(betterSell))
+    
+    # Realiza a ordem de venda com base nas informações inseridas e calculadas
+    time.sleep(1)
+    sellOrder = PlaceSellOrder(coin_pair,saldo,betterSell,str(int(time.time())))
+    sellOrder_id = sellOrder.getOrderId()
+    
+    # Retorna o ID da ordem de venda
+    return sellOrder_id 
+
 while True:
-        ciclo=ciclo+1
-
-        f = open(file,'a')
-        f.write("\n----------------------------------------------------------\n")
-        f.write("################# CICLO: "+str(ciclo)+" ##################\n")
-        f.write("######### Bot iniciado em: "+inicioBot+"\n")
-        f.write("######### Hora Atual: "+str(datetime.fromtimestamp(time.time()).strftime('%d-%m-%Y %H:%M:%S'))+"\n")
-        f.write("######### Lendo o arquivo de configuração.\n")
-        f.close()
-
+    # Obtém a percentagem do spreed passado por parâmetro no arquivo.
+    # Em caso de erro exibe a mensagem e encerra o script.
+    try:        
         cfg.read('config')
+        spreedBuy=cfg.getfloat('spreed','buy')
+        spreedSell=cfg.getfloat('spreed','sell')
+    except:
+        print("É necessário passar dois argumento spreed como parâmetro")
+        print("Um para compra e outro pra venda:")
+        print("Edite o arquivo config na seção spreed.")
+        exit()
 
-        active = cfg.getint('conf', 'active')
-        priceBuy = cfg.getfloat('conf','buy')
-        priceSell = cfg.getfloat('conf','sell')
-        stoploss = cfg.getfloat('conf','stoploss')
-        res = cfg.getfloat('conf','resistence')
-        stopmovel = cfg.getfloat('conf','stopmovel')
-        coin = cfg.get('conf','coin')
-        coinpair = cfg.get('conf','coinpair')
-
-        perGain = float(((priceSell-priceBuy)/priceBuy)*100)
-
+    try:
+        # Cabeçalho
         f = open(file,'a')
-        f.write("\tAtivo: "+str(active)+"\n")
-        f.write("\tPreço de Compra: R$"+str(priceBuy)+"\n")
-        f.write("\tPreço de Venda: R$"+str(priceSell)+"\n")
-        f.write("\tDiferença entre compra e venda: "+str(perGain)+"%\n")
-        f.write("\tStop Loss: R$"+str(stoploss)+"\n")
-        f.write("\tResistência: R$"+str(res)+"\n")
-        f.write("\tStop Movel: "+str(stopmovel)+"%\n")
-
-        # Obtendo o valor da última negociação
-        try:
-                td = Trades()
-                currentPrice = float(td.getPrice())
-        except:
-                f.write("############## ERRO ##############\n")
-                f.write("\tErro ao tentar obter o preço atual.\n")
-                f.write("\tNa linha 94 e 95 do arquivo.\n")
-        f.write("\tPreço atual: R$"+str(currentPrice)+"\n")
+        f.write("#########################################\n")
+        f.write("Bot Iniciado: "+inicioBot+"\n")
+        f.write("Ordens criadas no dia: "+str(ordensDia)+"\n")
+        f.write("Operação Iniciada: "+str(datetime.fromtimestamp(time.time()).strftime('%d-%m-%Y %H:%M:%S'))+"\n\n")
         f.close()
-
-
-        # Obtém informações da conta
+    
+        # Contador para ordens criadas no dia
+        ordensDia=ordensDia+1
+    
+        # Exibe o cabeçalho no arquivo out
+        f = open(file, 'a')
+        f.write("Obtendo o valor da última Compra ...\n")
         time.sleep(1)
-        try:
-                AccountInfo = GetAccountInfo(str(int(time.time())))
-                saldoBRL = float(AccountInfo.getBalanceAvailable('brl'))
-                qtdCoin = float(AccountInfo.getBalanceAvailable(coin))
-        except:
-                f = open(file,'a')
-                f.write("############## ERRO ##############\n")
-                f.write("\tErro ao tentar obter informações da conta.\n")
-                f.write("\tNa linha 107-109 do arquivo.\n")
-                f.close()
+        l = ListOrders(moeda,str(int(time.time())),4,1)
+        ultimaCompra = l.getOrdersLimitPrice()
+        f.write("Valor da última Compra: R$"+str(ultimaCompra)+"\n\n")
+        f.close()
+        time.sleep(1)
 
+        AccountInfo = GetAccountInfo(str(int(time.time())))
+        saldoBRL = float(AccountInfo.getBalanceAvailable('brl'))
+        qtdCoin = float(AccountInfo.getBalanceAvailable('xrp'))  
 
+        # Exibe o saldo das moedas
         f = open(file,'a')
-        f.write("\n\tSaldo em Reais: R$"+str(saldoBRL)+"\n")
-        f.write("\tSaldo em "+coin.upper()+": "+str(qtdCoin)+"\n")
+        f.write("Saldo em Reais: R$"+str(saldoBRL)+"\n")
+        f.write("Saldo em Coin: R$"+str(qtdCoin)+"\n\n")
+        f.write("Spreed definido pelo usuário para compra: "+str(float("{0:9.2f}".format(spreedBuy*100)))+"%\n")
+        f.write("Spreed definido pelo usuário para venda: "+str(float("{0:9.2f}".format(spreedSell*100)))+"%\n")
+        f.write("Spreed definido pelo orderbook: "+str(spreedOrderbook(moeda))+"%\n")
+        f.write("#########################################\n")
         f.close()
 
-        # se o preço atual estiver entre o stoploss e a resistência
-        if currentPrice>stoploss and currentPrice<res and active==1:
-                f = open(file,'a')
-                f.write("\n################ EXECUÇÃO NORMAL #################\n")
-                f.write("# O preço atual está entre o stoploss e a resistência.\n")
-                f.write("\tResistência: R$"+str(res)+"\n")
-                f.write("\tPreço de Venda: R$"+str(priceSell)+"\n")
-                f.write("\tPreço atual: R$"+str(currentPrice)+"\n")
-                f.write("\tPreço de Compra: R$"+str(priceBuy)+"\n")
-                f.write("\tStop Loss: R$"+str(stoploss)+"\n")
-                f.close()
-                if qtdCoin>=0.1:
-                        time.sleep(1)
-                        f = open(file,'a')
-                        try:
-                                sellOrder = PlaceSellOrder(coinpair,qtdCoin,priceSell,str(int(time.time())))                        
-                                f.write("\tOrdem de venda criada.\n")
-                        except:
-                                f.write("############## ERRO ##############\n")
-                                f.write("\tErro ao tentar criar ordem de venda.\n")
-                                f.write("\tNa linha 138 e 139 do arquivo.\n")
-                        f.close()
-                if saldoBRL>=10.0:
-                        qtd=float("{0:9.8f}".format(saldoBRL/priceBuy))
-                        time.sleep(1)
-                        f = open(file,'a')
-                        try:
-                                buyOrder = PlaceBuyOrder(coinpair,qtd,priceBuy,str(int(time.time())))
-                                f.write("\tOrdem de compra criada.\n")
-                        except:
-                                f.write("############## ERRO ##############\n")
-                                f.write("\tErro ao tentar criar ordem de compra.\n")
-                                f.write("\tNa linha 150 do arquivo.\n")                        
-                        f.close()
-                # Aguarda 10 segundos para verificar o preço novamente
-                time.sleep(10)
-        # se o preço atual estiver abaixo do stoploss
-        if currentPrice<=stoploss and active==1:
-                f = open(file,'a')
-                f.write("\n##################### STOPLOSS ###################\n")
-                f.write("##### O preço atual está abaixo do stoploss. #####\n")
-                f.write("\tStop Loss: R$"+str(stoploss)+"\n")
-                f.write("\tPreço atual: R$"+str(currentPrice)+"\n")
-                f.write("\tVerificando se há ordens abertas.\n")
-                f.close()
+        if qtdCoin>=0.1:
+            # Executa uma ordem de venda, obtém o ID e aguarda 20 segundos
+            f = open(file,'a')
+            f.write("\n\nIniciando ordem de venda...\n")        
+            sell_id = sell(moeda,qtdCoin,ultimaCompra)
+            f.write("Ordem de venda criada com id: "+str(sell_id)+"\n")
+            f.close()
+            f = open(file,'a')
+            f.write("Aguardando 1 minuto...\n")
+            f.close()
+            time.sleep(60)
+        
+            # Cancela a ordem
+            cancelOrder(moeda,sell_id)
+            f = open(file,'a')
+            f.write("Ordem de venda cancelada:\n\n")
+            f.close()            
+    
+        if saldoBRL>=10.0:    
+            # Executa uma ordem de compra, obtém o ID e aguarda 20 segundos
+            f = open(file,'a')
+            f.write("\n\nIniciando ordem de compra...\n")
+            buy_id = buy(moeda,saldoBRL)
+            f.write("Ordem de compra criada com id: "+str(buy_id)+"\n")
+            f.close()
+            f = open(file,'a')
+            f.write("Aguardando 20 segundos...\n")
+            f.close()
+            time.sleep(20)
+    
+            # Cancela a ordem
+            cancelOrder(moeda,buy_id)
+            f = open(file,'a')
+            f.write("Ordem de compra cancelada:\n\n")
+            f.close()
 
-                # Verificar se há ordens abertas e cancela
+        if saldoBRL<10.0 and qtdCoin<0.1:
+            # Verifica se há ordens abertas
+            f = open(file,'a')
+            f.write("\nVerificando se há ordens abertas...\n")
+            f.close()
+            try:
                 time.sleep(1)
+                l = ListOrders(moeda,str(int(time.time())),2)
+                if int(l.getOrdersStatus()) == 2:
+                    f = open(file,'a')
+                    f.write("Há ordens abertas com ID: "+str(l.getOrdersId())+"\n")
+                    f.close()
+                    time.sleep(1)
+                    cancelOrder(moeda,l.getOrdersId())
+                    f = open(file,'a')
+                    f.write("Ordem Cancelada.\n")
+                    f.close()
+            except:
                 f = open(file,'a')
-                try:
-                        # lista ordens de vendas abertas
-                        l = ListOrders(coinpair,str(int(time.time())),2)                        
-                        # enquanto tiver ordens abertas
-                        if int(l.getOrdersStatus()) == 2:
-                                f.write("\tOrdens abertas com ID: "+str(l.getOrdersId())+"\n")
-                                time.sleep(1)
-                                try:
-                                        cancelOrder = CancelOrder(coinpair,l.getOrdersId(),str(int(time.time())))
-                                        f.write("\tOrdem Cancelada.\n")
-                                except:
-                                        f.write("############## ERRO ##############\n")
-                                        f.write("\tErro ao tentar cancelar a ordem.\n")
-                                        f.write("\tNa linha 175 do arquivo.\n") 
-                except:
-                        f.write("############## ERRO ##############\n")
-                        f.write("\tErro ao tentar listar as ordens.\n")
-                        f.write("\tNa linha 168-171 do arquivo.\n")
+                f.write("Não há ordens abertas.\n")
                 f.close()
-                # se a quantidade de moedas for maior do que o mínimo                                
-                if qtdCoin>=0.1:
-                        f = open(file,'a')
-                        f.write("\tExecutando ordem de venda de emergência.\n")
-                        f.close()
-                        # criar as ordens de venda
-                        time.sleep(1)
-                        try:
-                                orderBook = ListOrderBook(coinpair,str(int(time.time())))
-                                priceSell = float(orderBook.getOrderbookBidsLimitPrice(5))
-                        except:
-                                f = open(file,'a')
-                                f.write("############## ERRO ##############\n")
-                                f.write("\tErro ao tentar obter o preço de venda do orderbook.\n")
-                                f.write("\tNa linha 194-195 do arquivo.\n")
-                                f.close()
-                        time.sleep(1)
-                        try:
-                                f = open(file,'a')
-                                sellOrder = PlaceSellOrder(coinpair,qtdCoin,priceSell,str(int(time.time())))                                
-                                f.write("\tOrdem de venda executada.\n")
-                                f.close()
-                        except:
-                                f = open(file,'a')
-                                f.write("############## ERRO ##############\n")
-                                f.write("\tErro ao tentar criar uma ordem de venda.\n")
-                                f.write("\tNa linha 205 do arquivo.\n")
-                                f.close()
-                        
-        # se o preço atual estiver acima da resistência
-        if currentPrice>=res and active==1:
-                f = open(file,'a')
-                f.write("\n################## RESISTÊNCIA ###################\n")
-                f.write("##### Preço atual está acima da resistência. #####\n")
-                f.write("\tPreço atual: R$"+str(currentPrice)+"\n")
-                stopPrice=float("{0:9.8f}".format(res*(1-(stopmovel/100))))
-                f.write("\tStop Price: R$"+str(stopPrice)+"\n")
-                f.close()
+            f=open(file,'a')
+            f.write("Tentando Novamente.\n\n")
+            f.close()
 
-                if saldoBRL>=10.0:
-                        time.sleep(1)
-                        try:
-                                orderBook = ListOrderBook(coinpair,str(int(time.time())))
-                                price = float(orderBook.getOrderbookAsksLimitPrice(5))
-                                 # Calcula a quantidade a ser comprada
-                                qtd=float("{0:9.8f}".format(saldoBRL/price))
-                        except:
-                                f = open(file,'a')
-                                f.write("############## ERRO ##############\n")
-                                f.write("\tErro ao tentar listar as ordens do orderbook.\n")
-                                f.write("\tNa linha 237 e 238 do arquivo.\n")
-                                f.close()
-                       
-                        f = open(file,'a')
-                        time.sleep(1)
-                        try:
-                                buyOrder = PlaceBuyOrder(coinpair,qtd,price,str(int(time.time())))
-                                f.write("\tExecutando ordem de compra.\n")
-                        except:
-                                f.write("############## ERRO ##############\n")
-                                f.write("\tErro ao tentar criar uma ordem de compra.\n")
-                                f.write("\tNa linha 251 do arquivo.\n")
-                        f.close()
-
-                tempPrice=stopPrice                        
-                # enquanto o currentPrice>stopPrice
-                while currentPrice>stopPrice:
-                        tempPrice=float("{0:9.8f}".format(currentPrice*(1-(stopmovel/100))))
-                        if tempPrice>stopPrice:
-                                stopPrice=tempPrice
-                        # aguarda 5 segundos para verificar o preço novamente
-                        time.sleep(5)
-                        f = open(file,'a')
-                        try:
-                                # Obtendo o valor da última negociação
-                                td = Trades()
-                                currentPrice = float(td.getPrice())
-                        except:
-                                f.write("############## ERRO ##############\n")
-                                f.write("\tErro ao tentar obter o valor do preço atual.\n")
-                                f.write("\tNa linha 269 e 270 do arquivo.\n")
-                        
-                        f.write("\n################## RESISTÊNCIA ###################\n")
-                        f.write("###### Preço atual está acima do Stop Price. #####\n")
-                        f.write("\tPreço atual: R$"+str(currentPrice)+"\n")
-                        f.write("\tStop Price: R$"+str(stopPrice)+"\n")
-                        f.close()
-                # após sair do loop executa a ordem de venda
-                f = open(file,'a')
-                f.write("\n############## EXECUTANDO STOP PRICE #############\n")
-                f.write("#### O preço atual está abaixo do stop price. ####\n")
-                f.write("\tStop Price: R$"+str(stopPrice)+"\n")
-                f.write("\tPreço atual: R$"+str(currentPrice)+"\n")
-                
-                # Obtém informações da conta
-                f.write("\tObtendo informações da conta.\n")
-                f.close()
-                time.sleep(1)
-                f = open(file,'a')
-                try:
-                        AccountInfo = GetAccountInfo(str(int(time.time())))
-                        qtdCoin = float(AccountInfo.getBalanceAvailable(coin))
-                        f.write("\tQuantidade de "+coin.upper()+": "+str(qtdCoin)+"\n")
-                except:
-                        f.write("############## ERRO ##############\n")
-                        f.write("\tErro ao tentar obter informações da conta.\n")
-                        f.write("\tNa linha 294 e 295 do arquivo.\n")                
-                f.close()
-
-                # criar a orden de venda
-                time.sleep(1)
-                f = open(file,'a')
-                try:
-                        orderBook = ListOrderBook(coinpair,str(int(time.time())))                
-                        priceSell = float(orderBook.getOrderbookBidsLimitPrice(5))
-                        f.write("\tPreço a ser vendido: R$"+str(priceSell)+"\n")
-                except:
-                        f.write("############## ERRO ##############\n")
-                        f.write("\tErro ao tentar obter o preço de venda do orderbook.\n")
-                        f.write("\tNa linha 307-309 do arquivo.\n")
-
-                time.sleep(1)
-                try:
-                        f.write("\tExecutando ordem de venda.\n")
-                        sellOrder = PlaceSellOrder(coinpair,qtdCoin,priceSell,str(int(time.time())))
-                except:
-                        f.write("############## ERRO ##############\n")
-                        f.write("\tErro ao tentar executar uma ordem de venda.\n")
-                        f.write("\tNa linha 320 do arquivo.\n")
-                f.close()
-
-        if active==0:
-                time.sleep(1)
-                f = open(file,'a')
-                try:
-                        # lista ordens de vendas abertas
-                        l = ListOrders(coinpair,str(int(time.time())),2)                        
-                        # enquanto tiver ordens abertas
-                        if int(l.getOrdersStatus()) == 2:
-                                f.write("\tOrdens abertas com ID: "+str(l.getOrdersId())+"\n")
-                                time.sleep(1)
-                                try:
-                                        cancelOrder = CancelOrder(coinpair,l.getOrdersId(),str(int(time.time())))
-                                        f.write("\tOrdem Cancelada.\n")
-                                except:
-                                        f.write("############## ERRO ##############\n")
-                                        f.write("\tErro ao tentar cancelar a ordem.\n")
-                                        f.write("\tNa linha 342 do arquivo.\n") 
-                except:
-                        f.write("\n############### AVISO ###############\n")
-                        f.write("\tNão há ordens abertas.\n")
-
-                f.write("\n############### BOT DESATIVADO ###############\n")
-                f.write("\tAguardando novas ordens.\n")
-                f.write("##############################################\n")
-                f.close()
-                time.sleep(10)
+    except :        
+        f = open(file,'a')
+        f.write("\nOcorreu algum erro!!!\n")
+        f.write("Tentando novamente em 3 segundos!...\n")
+        f.close()
+        time.sleep(3)
