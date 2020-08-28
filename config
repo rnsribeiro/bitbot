@@ -27,5 +27,5 @@ resistence=1.77
 stopmovel=2
 
 [spreed]
-buy=0.01
+buy=0.02
 sell=0.008
