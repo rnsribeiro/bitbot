@@ -252,6 +252,6 @@ class MyVol:
 			cont=cont+1
 		return quantidade
 
-myvol = MyVol('BRLXRP',str(int(time.time())))
+myvol = MyVol('BRLBTC',str(int(time.time())))
 
 print(myvol.getMyVol())

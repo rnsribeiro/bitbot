@@ -28,7 +28,7 @@ class GetAccountInfo:
 	REQUEST_PATH = '/tapi/v3/'
 
 	# variável que pode ser passada por parâmetro
-	#coin='xrp'
+        #coin='btc'
 
 	# Nonce
 	# Para obter variação de forma simples
@@ -114,7 +114,7 @@ class GetAccountInfo:
 		'''
 		return self.result['response_data']['withdrawal_limits'][coin]['total']
 
-	#coin='xrp'
+	#coin='btc'
 	#print(getBalanceAvailable(coin))
 	#print(getBalanceTotal(coin))
 	#print(getBalanceAmountOpenOrders(coin))

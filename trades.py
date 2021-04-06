@@ -15,7 +15,7 @@ from http import client
 class Trades:
 	REQUEST_HOST = 'www.mercadobitcoin.net'
 
-	def __init__(self,coin='xrp'):
+	def __init__(self,coin='btc'):
 		REQUEST_PATH='/api/'+coin.upper()+'/trades/'
 
 		try:

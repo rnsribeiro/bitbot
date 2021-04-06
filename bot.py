@@ -29,11 +29,11 @@ from datetime import datetime
 
 # Obtém a hora de inicio do bot e cria um arquivo out com base na data.
 inicioBot = str(datetime.fromtimestamp(time.time()).strftime('%d-%m-%Y %H:%M:%S'))
-file = "out-"+str(datetime.fromtimestamp(time.time()).strftime('%Y%m%d-%H%M%S'))
+file = "/home/pi/out-"+str(datetime.fromtimestamp(time.time()).strftime('%Y%m%d-%H%M%S'))
 
 # Moeda a ser usada no script futuramente pode ser passado por
 # parâmetro na linha de comando.
-moeda='BRLXRP'
+moeda='BRLBTC'
 
 # Obtém as informações de configuração do bot
 cfg = configparser.ConfigParser()
@@ -82,10 +82,10 @@ def buy(coin_pair,saldo):
     while cont<20:
         priceBuy = float(orderBook.getOrderbookBidsLimitPrice(cont))
         f = open(file,'a')
-        f.write("Maior compra com indice: {0} R${1:9.5f}".format(cont,priceBuy)+"\n")
+        f.write("Maior compra com indice: {0} R${1:9.8f}".format(cont,priceBuy)+"\n")
         f.close()
         if betterBuy>=priceBuy:
-            betterBuy=priceBuy+0.00001
+            betterBuy=priceBuy+0.00000001
             break
         cont=cont+1        
     
@@ -133,10 +133,10 @@ def sell(coin_pair,saldo,lastBuy):
     while cont<20:
         priceSell = float(orderBook.getOrderbookAsksLimitPrice(cont))
         f = open(file,'a')
-        f.write("Menor venda com indice: {0} R${1:9.5f}".format(cont,priceSell)+"\n")
+        f.write("Menor venda com indice: {0} R${1:9.8f}".format(cont,priceSell)+"\n")
         f.close()
         if betterSell<=priceSell:
-            betterSell=priceSell-0.00001
+            betterSell=priceSell-0.00000001
             break
         cont=cont+1
 
@@ -170,7 +170,7 @@ while True:
     # Obtém a percentagem do spreed passado por parâmetro no arquivo.
     # Em caso de erro exibe a mensagem e encerra o script.
     try:        
-        cfg.read('config')
+        cfg.read('/home/pi/bitbot/config')
         spreedBuy=cfg.getfloat('spreed','buy')
         spreedSell=cfg.getfloat('spreed','sell')
     except:
@@ -203,7 +203,7 @@ while True:
 
         AccountInfo = GetAccountInfo(str(int(time.time())))
         saldoBRL = float(AccountInfo.getBalanceAvailable('brl'))
-        qtdCoin = float(AccountInfo.getBalanceAvailable('xrp'))  
+        qtdCoin = float(AccountInfo.getBalanceAvailable('btc'))
 
         # Exibe o saldo das moedas
         f = open(file,'a')
@@ -215,10 +215,10 @@ while True:
         f.write("#########################################\n")
         f.close()
 
-        if qtdCoin>=0.1:
+        if qtdCoin>=0.00000001:
             # Executa uma ordem de venda, obtém o ID e aguarda 20 segundos
             f = open(file,'a')
-            f.write("\n\nIniciando ordem de venda...\n")        
+            f.write("\n\nIniciando ordem de venda...\n")
             sell_id = sell(moeda,qtdCoin,ultimaCompra)
             f.write("Ordem de venda criada com id: "+str(sell_id)+"\n")
             f.close()
@@ -241,9 +241,9 @@ while True:
             f.write("Ordem de compra criada com id: "+str(buy_id)+"\n")
             f.close()
             f = open(file,'a')
-            f.write("Aguardando 20 segundos...\n")
+            f.write("Aguardando 10 segundos...\n")
             f.close()
-            time.sleep(20)
+            time.sleep(10)
     
             # Cancela a ordem
             cancelOrder(moeda,buy_id)

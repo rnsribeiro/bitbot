@@ -20,9 +20,9 @@ from place_sell_order import PlaceSellOrder
 from cancel_order import CancelOrder
 import time
 
-sell = PlaceSellOrder('BRLXRP',0.1,1.081,)
+sell = PlaceSellOrder('BRLBTC',0.1,1.081,)
 time.sleep(30)
-cancelarOrdem = CancelOrder('XRPBRL',sell.getOrderId())
+cancelarOrdem = CancelOrder('BTCBRL',sell.getOrderId())
 
 
 
